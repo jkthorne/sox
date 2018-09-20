@@ -1,6 +1,6 @@
 # socks
 
-TODO: Write a description here
+This is a socks 5 implementatino
 
 ## Installation
 
@@ -9,7 +9,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   socks:
-    github: your-github-user/socks
+    github: wontruefree/socks
 ```
 
 ## Usage
@@ -18,20 +18,12 @@ dependencies:
 require "socks"
 ```
 
-TODO: Write usage instructions here
+In one terminal run
+```bash
+ssh -D 1080 -C -N 127.0.0.1 -vv
+```
 
-## Development
-
-TODO: Write development instructions here
-
-## Contributing
-
-1. Fork it (<https://github.com/your-github-user/socks/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
-## Contributors
-
-- [your-github-user](https://github.com/your-github-user) Jack Thorne - creator, maintainer
+Then in the other run
+```bash
+crystal src/socks.cr
+```
