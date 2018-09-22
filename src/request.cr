@@ -1,4 +1,4 @@
-struct Request
+struct Socks::Request
   property buffer
 
   def initialize(reply = :connect)

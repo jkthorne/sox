@@ -1,4 +1,4 @@
-class ConnectionResponse
+class Socks::ConnectionResponse
   property buffer
 
   def initialize

@@ -1,4 +1,4 @@
-class ConnectionRequest
+class Socks::ConnectionRequest
   property buffer
 
   def initialize
