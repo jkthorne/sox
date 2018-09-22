@@ -35,12 +35,10 @@ class Socks
   end
 
   def connect_remote(socks_socket)
-    ## CONNECT
     connect_message = Request.new
     connect_message.bind_addr = "93.184.216.34"
     socks_socket.write(connect_message.buffer)
 
-    ## RECEIVE
     connect_reply = Reply.new
     socks_socket.read(connect_reply.buffer)
     puts "REMOTE STATUS: #{connect_reply.server_message}"
