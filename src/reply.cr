@@ -6,13 +6,15 @@ class Socks::Reply
   end
 
   def server_message
-    message = "Server Connected"
+    message = "Unknown State"
 
     message = "Server doesn't reply" if buffer.empty?
     message = "SOCKS version #{buffer[0]} is not 5" if buffer[0] != VERSION
     message = "NOT IPv4" if buffer[3] != 0o001
 
     case buffer[1]
+    when 0_u8
+      message = "succeeded"
     when 1_u8
       message = "general SOCKS server failure"
     when 2_u8
