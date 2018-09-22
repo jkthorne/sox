@@ -25,16 +25,16 @@ class Socks
     IPV6       = 4_u8
   end
 
-  def main
-    socks_socket = TCPSocket.new("127.0.0.1", 1080)
-
+  def connect_host(socks_socket)
     connection_request = ConnectionRequest.new
     socks_socket.write(connection_request.buffer)
 
     connection_response = ConnectionResponse.new
     socks_socket.read(connection_response.buffer)
-    puts connection_response.server_message
+    puts "HOST STATUS: #{connection_response.server_message}"
+  end
 
+  def connect_remote(socks_socket)
     ## CONNECT
     connect_message = Request.new
     connect_message.bind_addr = "93.184.216.34"
@@ -43,7 +43,14 @@ class Socks
     ## RECEIVE
     connect_reply = Reply.new
     socks_socket.read(connect_reply.buffer)
-    puts connect_reply.server_message
+    puts "REMOTE STATUS: #{connect_reply.server_message}"
+  end
+
+  def main
+    socks_socket = TCPSocket.new("127.0.0.1", 1080)
+
+    connect_host(socks_socket)
+    connect_remote(socks_socket)
 
     socks_socket << "GET / HTTP/1.1\nhost: www.example.com\n\n"
     25.times do
