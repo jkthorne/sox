@@ -1,4 +1,4 @@
-struct Socks::Request
+class Socks::Request
   property buffer
 
   def initialize(reply = :connect)
@@ -63,7 +63,7 @@ struct Socks::Request
   end
 
   def inspect(io)
-    io << "v:" << version << " r:" << reply << " t:" << addr_type <<
-          " a:" << bind_addr << " p:" << bind_port
+    io << "#<Socks::Request version=#{version} reply=#{reply} "
+    io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"
   end
 end
