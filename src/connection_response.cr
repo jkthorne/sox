@@ -13,7 +13,7 @@ class Socks::ConnectionResponse
     !connected?
   end
 
-  def auth_message
+  def server_message
     if buffer.empty?
       "Server doesn't reply authentication"
     elsif buffer[0] != 0o004 && buffer[0] != 0o005

@@ -33,7 +33,7 @@ class Socks
 
     connection_response = ConnectionResponse.new
     socks_socket.read(connection_response.buffer)
-    puts connection_response.auth_message
+    puts connection_response.server_message
 
     ## CONNECT
     connect_message = Request.new
