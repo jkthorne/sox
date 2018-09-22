@@ -24,33 +24,18 @@ module ADDR_TYPE
   IPV6       = 4_u8
 end
 
-require "./connection_buffer"
-require "./connection_request"
+require "./connection_buffer.cr"
+require "./connection_request.cr"
+require "./connection_response.cr"
 
 socks_socket = TCPSocket.new("127.0.0.1", 1080)
 
 connection_request = ConnectionRequest.new
 socks_socket.write(connection_request.buffer)
 
-struct ConnectionResponse
-  property buffer
-
-  def initialize
-    @buffer = Bytes.new(2)
-  end
-end
-
 connection_response = ConnectionResponse.new
-auth_reply = Bytes.new(2)
-socks_socket.read(auth_reply)
-
-if auth_reply.empty?
-  puts "Server doesn't reply authentication"
-elsif auth_reply[0] != 0o004 && auth_reply[0] != 0o005
-  puts "SOCKS version #{auth_reply[0]} not supported"
-elsif auth_reply[1] != 0o000
-  puts "SOCKS authentication method #{auth_reply[1]} neither requested nor supported"
-end
+socks_socket.read(connection_response.buffer)
+puts connection_response.auth_message
 
 ## CONNECT
 connect_message = ConnectBuffer.new
