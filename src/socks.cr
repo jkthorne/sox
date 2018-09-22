@@ -1,6 +1,6 @@
 require "socket"
 
-class Socks < Socket
+class Socks
   VERSION = 5_u8
   RESERVED = 0_u8
 
@@ -58,3 +58,5 @@ require "./connection_request.cr"
 require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
+
+Socks.new.main
