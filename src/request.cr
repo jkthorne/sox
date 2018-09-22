@@ -1,4 +1,4 @@
-struct ConnectBuffer
+struct Request
   property buffer
 
   def initialize(reply = :connect)

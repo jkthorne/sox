@@ -24,9 +24,9 @@ module ADDR_TYPE
   IPV6       = 4_u8
 end
 
-require "./connection_buffer.cr"
 require "./connection_request.cr"
 require "./connection_response.cr"
+require "./request.cr"
 
 socks_socket = TCPSocket.new("127.0.0.1", 1080)
 
@@ -38,13 +38,13 @@ socks_socket.read(connection_response.buffer)
 puts connection_response.auth_message
 
 ## CONNECT
-connect_message = ConnectBuffer.new
+connect_message = Request.new
 connect_message.bind_addr = "93.184.216.34"
 
 pp! connect_message
 socks_socket.write(connect_message.buffer)
 
-## RECIEVE
+## RECEIVE
 connect_reply = Bytes.new(4)
 socks_socket.read(connect_reply)
 
