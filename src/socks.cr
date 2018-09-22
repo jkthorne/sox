@@ -24,54 +24,31 @@ module ADDR_TYPE
   IPV6       = 4_u8
 end
 
-struct ConnectReply
-  property buffer
-
-  def initialize(@buffer : Bytes)
-  end
-
-  def version
-    buffer[0]
-  end
-
-  def reply
-    buffer[1]
-  end
-
-  def reserved
-    buffer[2]
-  end
-
-  def addr_type
-    buffer[3]
-  end
-
-  def bind_addr
-  end
-
-  def bind_port
-    buffer[-1]
-  end
-
-  def inspect(io)
-    io << "v:" << version << " r:" << reply << " t:" << addr_type <<
-          " a:" << bind_addr << " p:" << bind_port
-  end
-end
+require "./connection_buffer"
+require "./connection_request"
 
 socks_socket = TCPSocket.new("127.0.0.1", 1080)
 
+connection_request = ConnectionRequest.new
 handshake = Bytes.new(3)
 handshake[0] = VERSION ## Socks Version Number
 handshake[1] = COMMAND::CONNECT
 handshake[2] = RESERVED
-socks_socket.write(handshake)
-# socks_socket.write "\005\001\000".to_slice ## NO AUTHENTICATION
 
+#socks_socket.write(connection_request)
+socks_socket.write(handshake)
+
+struct ConnectionResponse
+  property buffer
+
+  def initialize
+    @buffer = Bytes.new(2)
+  end
+end
+
+connection_response = ConnectionResponse.new
 auth_reply = Bytes.new(2)
 socks_socket.read(auth_reply)
-
-pp! auth_reply
 
 if auth_reply.empty?
   puts "Server doesn't reply authentication"
@@ -82,23 +59,11 @@ elsif auth_reply[1] != 0o000
 end
 
 ## CONNECT
-connect_message = Bytes.new(10)
-
-connect_message[0] = VERSION
-connect_message[1] = COMMAND::CONNECT
-connect_message[2] = RESERVED
-## ADDR 93.184.216.34
-connect_message[3] = ADDR_TYPE::IPV4
-connect_message[4] = 93_u8
-connect_message[5] = 184_u8
-connect_message[6] = 216_u8
-connect_message[7] = 34_u8
-## PORT
-connect_message[8] = 0_u8
-connect_message[9] = 80_u8
+connect_message = ConnectBuffer.new
+connect_message.bind_addr = "93.184.216.34"
 
 pp! connect_message
-socks_socket.write(connect_message)
+socks_socket.write(connect_message.buffer)
 
 ## RECIEVE
 connect_reply = Bytes.new(4)
@@ -106,8 +71,6 @@ socks_socket.read(connect_reply)
 
 puts "Server doesn't reply" if connect_reply.empty?
 puts "SOCKS version #{connect_reply[0]} is not 5" if connect_reply[0] != 0o005
-
-pp! ConnectReply.new(connect_reply)
 
 case connect_reply[1]
 when 1
@@ -132,4 +95,9 @@ puts "NOT IPv4" if connect_reply[3] != 0o001
 
 pp! connect_reply
 
-socks_socket.close%                                                                                                                    (spark:crystal)$
+socks_socket << "GET / HTTP/1.1\nhost: www.example.com\n\n"
+25.times do
+  puts socks_socket.gets
+end
+
+socks_socket.close
