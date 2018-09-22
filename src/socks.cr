@@ -30,13 +30,7 @@ require "./connection_request"
 socks_socket = TCPSocket.new("127.0.0.1", 1080)
 
 connection_request = ConnectionRequest.new
-handshake = Bytes.new(3)
-handshake[0] = VERSION ## Socks Version Number
-handshake[1] = COMMAND::CONNECT
-handshake[2] = RESERVED
-
-#socks_socket.write(connection_request)
-socks_socket.write(handshake)
+socks_socket.write(connection_request.buffer)
 
 struct ConnectionResponse
   property buffer

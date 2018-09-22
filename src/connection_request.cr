@@ -3,6 +3,13 @@ class ConnectionRequest
 
   def initialize
     @buffer = Bytes.new(3)
+    @buffer[0] = VERSION
+    @buffer[1] = COMMAND::CONNECT
+    @buffer[2] = RESERVED
+  end
+
+  def self.default_buffer
+    new.buffer
   end
 
   def version
