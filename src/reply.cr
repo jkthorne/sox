@@ -1,8 +1,32 @@
 class Socks::Reply
   property buffer
 
-  def initialize
-    @buffer = Bytes.new(4)
+  def initialize(buffer = Bytes.new(10))
+    @buffer = buffer
+  end
+
+  def version
+    buffer[0]
+  end
+
+  def reply
+    buffer[1]
+  end
+
+  def reserved
+    buffer[2]
+  end
+
+  def addr_type
+    buffer[3]
+  end
+
+  def bind_addr
+    buffer[4, 4]
+  end
+
+  def bind_port
+    buffer[buffer.size - 2, 2]
   end
 
   def server_message
@@ -34,5 +58,10 @@ class Socks::Reply
     end
 
     message
+  end
+
+  def inspect(io)
+    io << "#<Socks::Reply version=#{version} reply=#{reply} "
+    io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"
   end
 end

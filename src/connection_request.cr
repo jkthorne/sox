@@ -30,4 +30,8 @@ class Socks::ConnectionRequest
   def command
     @buffer[1]
   end
+
+  def inspect(io)
+    io << "#<Socks::ConnectionRequest version=#{version} command=#{command}>"
+  end
 end

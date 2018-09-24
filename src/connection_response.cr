@@ -24,4 +24,8 @@ class Socks::ConnectionResponse
       "Server connected"
     end
   end
+
+  def inspect(io)
+    io << "#<Socks::Request version=#{buffer[0]} method=#{buffer[1]}>"
+  end
 end

@@ -6,6 +6,8 @@ class Socks::Request
     buffer[0] = VERSION
     buffer[1] = COMMAND::CONNECT
     buffer[3] = 1_u8
+    #buffer[8] = 31_u8
+    #buffer[9] = 64_u8
     buffer[9] = 80_u8
   end
 
@@ -59,7 +61,7 @@ class Socks::Request
   end
 
   def bind_port
-    buffer[buffer.size - 3, 2]
+    buffer[buffer.size - 2, 2]
   end
 
   def inspect(io)
