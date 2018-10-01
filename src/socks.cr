@@ -25,44 +25,42 @@ class Socks < TCPSocket
     IPV6       = 4_u8
   end
 
-  def connect_host(socks_socket)
+  def connect_host
     connection_request = ConnectionRequest.new
-    socks_socket.write(connection_request.buffer)
+    write(connection_request.buffer)
 
     connection_response = ConnectionResponse.new
-    socks_socket.read(connection_response.buffer)
+    read(connection_response.buffer)
     STDOUT.puts "HOST STATUS: #{connection_response.server_message}"
   end
 
-  def connect_remote(socks_socket)
+  def connect_remote
     request = Request.new
     #request.bind_addr = "93.184.216.34"
     request.bind_addr = "127.0.0.1"
     #request.bind_addr = "0.0.0.0"
-    socks_socket.write(request.buffer)
+    write(request.buffer)
 
     reply = Reply.new
-    socks_socket.read(reply.buffer)
+    read(reply.buffer)
     STDOUT.puts "REMOTE STATUS: #{reply.server_message}"
   end
 
-  def main
-    socks_socket = TCPSocket.new("127.0.0.1", 1080)
-
-    connect_host(socks_socket)
-    connect_remote(socks_socket)
+  def main(vhost : String, path : String = "/")
+    connect_host
+    connect_remote
 
     #message = "GET / HTTP/1.1\nHost: 0.0.0.0\n\n"
-    message = "GET / HTTP/1.1\nHost: localhost\nAccept: */*\n\n"
+    message = "GET #{path} HTTP/1.1\nHost: #{vhost}\nAccept: */*\n\n"
     #message = "GET / HTTP/1.1\nHost: www.example.com\n\n"
     STDOUT.puts message
-    socks_socket << message
+    self << message
 
     10.times do |i|
-      STDOUT.puts "#{i}: #{socks_socket.gets}"
+      STDOUT.puts "#{i}: #{gets}"
     end
 
-    socks_socket.close
+    close
   end
 end
 
@@ -71,4 +69,4 @@ require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
 
-Socks.new("127.0.0.1", 1080).main
+#Socks.new("127.0.0.1", 1080).main
