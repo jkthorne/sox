@@ -1,6 +1,7 @@
 require "http/server"
 
 server = HTTP::Server.new do |context|
+  pp! context if ENV["DEBUG"] == "true"
   context.response.content_type = "text/plain"
   if context.request.path == "/ping"
     context.response.puts "pong"

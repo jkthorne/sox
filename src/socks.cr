@@ -38,7 +38,8 @@ class Socks < TCPSocket
     request = Request.new
     #request.bind_addr = "93.184.216.34"
     request.bind_addr = "127.0.0.1"
-    #request.bind_addr = "0.0.0.0"
+    request.bind_port = 8080
+
     write(request.buffer)
 
     reply = Reply.new
@@ -50,7 +51,6 @@ class Socks < TCPSocket
     connect_host
     connect_remote
 
-    #message = "GET / HTTP/1.1\nHost: 0.0.0.0\n\n"
     message = "GET #{path} HTTP/1.1\nHost: #{vhost}\nAccept: */*\n\n"
     #message = "GET / HTTP/1.1\nHost: www.example.com\n\n"
     STDOUT.puts message
@@ -69,4 +69,4 @@ require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
 
-#Socks.new("127.0.0.1", 1080).main
+Socks.new("127.0.0.1", 1080).main("127.0.0.1", "/ping")

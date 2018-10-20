@@ -6,9 +6,10 @@ class Socks::Request
     buffer[0] = VERSION
     buffer[1] = COMMAND::CONNECT
     buffer[3] = 1_u8
-    #buffer[8] = 31_u8
-    #buffer[9] = 64_u8
-    buffer[9] = 80_u8
+    buffer[8] = 31_u8
+    buffer[9] = 144_u8
+    # buffer[8] = 0_u8   ## NOTE: Default port 80
+    # buffer[9] = 80_u8  #        cont
   end
 
   def version
@@ -58,6 +59,11 @@ class Socks::Request
 
   def bind_addr
     buffer[4, 4]
+  end
+
+  def bind_port=(port_number)
+    IO::ByteFormat::NetworkEndian.encode(port_number.to_u16, buffer[buffer.size - 2, 2].to_slice)
+    bind_port
   end
 
   def bind_port
