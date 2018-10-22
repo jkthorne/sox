@@ -31,36 +31,19 @@ class Socks < TCPSocket
 
     connection_response = ConnectionResponse.new
     read(connection_response.buffer)
-    STDOUT.puts "HOST STATUS: #{connection_response.server_message}"
+    STDOUT.puts "HOST STATUS: #{connection_response.server_message}" if ENV["DEBUG"]? == true
   end
 
-  def connect_remote
+  def connect_remote(addr, port)
     request = Request.new
-    #request.bind_addr = "93.184.216.34"
-    request.bind_addr = "127.0.0.1"
-    request.bind_port = 8080
+    request.bind_addr = addr
+    request.bind_port = port
 
     write(request.buffer)
 
     reply = Reply.new
     read(reply.buffer)
-    STDOUT.puts "REMOTE STATUS: #{reply.server_message}"
-  end
-
-  def main(vhost : String, path : String = "/")
-    connect_host
-    connect_remote
-
-    message = "GET #{path} HTTP/1.1\nHost: #{vhost}\nAccept: */*\n\n"
-    #message = "GET / HTTP/1.1\nHost: www.example.com\n\n"
-    STDOUT.puts message
-    self << message
-
-    10.times do |i|
-      STDOUT.puts "#{i}: #{gets}"
-    end
-
-    close
+    STDOUT.puts "REMOTE STATUS: #{reply.server_message}" if ENV["DEBUG"]? == true
   end
 end
 
@@ -69,4 +52,15 @@ require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
 
-Socks.new("127.0.0.1", 1080).main("127.0.0.1", "/ping")
+require "http/client"
+
+socket = Socks.new("127.0.0.1", 1080)
+socket.connect_host
+socket.connect_remote("127.0.0.1", 8080)
+
+request = HTTP::Request.new("GET", "/ping", HTTP::Headers{"Host" => "127.0.0.1"}).to_io(socket)
+socket.flush
+response = HTTP::Client::Response.from_io(socket)
+
+pp! request
+pp! response
