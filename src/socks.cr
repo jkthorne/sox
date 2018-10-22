@@ -49,16 +49,3 @@ require "./connection_request.cr"
 require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
-
-require "http/client"
-
-socket = Socks.new("127.0.0.1", 1080)
-socket.connect_host
-socket.connect_remote("127.0.0.1", 8080)
-
-request = HTTP::Request.new("GET", "/ping", HTTP::Headers{"Host" => "127.0.0.1"}).to_io(socket)
-socket.flush
-response = HTTP::Client::Response.from_io(socket)
-
-pp! request
-pp! response

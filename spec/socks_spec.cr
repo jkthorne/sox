@@ -2,23 +2,31 @@ require "./spec_helper"
 
 describe Socks do
   it "smokes test" do
-    server_port = 5678
     server = HTTP::Server.new do |context|
-      STDOUT.puts "SERVER"
       context.response.content_type = "text/plain"
       if context.request.path == "/ping"
         context.response.print "pong"
       end
     end
 
-    tcp_server = TCPServer.new("127.0.0.1", server_port)
-    server.bind tcp_server
-    address = tcp_server.local_address
+    begin
+      address = server.bind_unused_port "127.0.0.1"
+      spawn { server.listen }
 
-    spawn { server.listen }
-    Fiber.yield
+      socket = Socks.new("127.0.0.1", 1080)
+      socket.connect_host
+      socket.connect_remote("127.0.0.1", address.port)
 
-    HTTP::Client.get("http://#{address}/ping").body.should eq "pong"
-    Socks.new("127.0.0.1", 1080).main("localhost", "/ping")
+      headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
+      request = HTTP::Request.new("GET", "/ping", headers)
+
+      request.to_io(socket)
+      socket.flush
+      response = HTTP::Client::Response.from_io?(socket)
+
+      response.not_nil!.body.chomp.should eq "pong"
+    ensure
+      server.close
+    end
   end
 end
