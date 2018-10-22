@@ -31,7 +31,6 @@ class Socks < TCPSocket
 
     connection_response = ConnectionResponse.new
     read(connection_response.buffer)
-    STDOUT.puts "HOST STATUS: #{connection_response.server_message}" if ENV["DEBUG"]? == true
   end
 
   def connect_remote(addr, port)
@@ -43,7 +42,6 @@ class Socks < TCPSocket
 
     reply = Reply.new
     read(reply.buffer)
-    STDOUT.puts "REMOTE STATUS: #{reply.server_message}" if ENV["DEBUG"]? == true
   end
 end
 
