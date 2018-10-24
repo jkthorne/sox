@@ -6,7 +6,7 @@ require "http/server"
 PORT = ENV["PORT"].to_i
 
 
-`ssh -D 1080 -C -N 127.0.0.1`
+# `ssh -D 1080 -C -N 127.0.0.1`
 
 #pp! Process.new("ssh -D #{PORT} -C -N root@167.99.184.241")
 #pp! `ssh -D #{PORT} -C -N root@167.99.184.241`
