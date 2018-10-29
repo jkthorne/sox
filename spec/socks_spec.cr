@@ -13,8 +13,7 @@ describe Socks do
       address = server.bind_unused_port "127.0.0.1"
       spawn { server.listen }
 
-      socket = Socks.new("127.0.0.1", 1080)
-      socket.connect("127.0.0.1", address.port)
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: 1080, addr: "127.0.0.1", port: address.port)
 
       headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
       request = HTTP::Request.new("GET", "/ping", headers)
@@ -30,8 +29,7 @@ describe Socks do
   end
 
   it "tor" do
-    socket = Socks.new("127.0.0.1", 9050)
-    socket.connect("93.184.216.34", 80)
+    socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050, addr: "93.184.216.34", port: 80)
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)

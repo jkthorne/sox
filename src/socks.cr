@@ -25,6 +25,11 @@ class Socks < TCPSocket
     IPV6       = 4_u8
   end
 
+  def initialize(addr : String, port : Int, host_addr : String = "127.0.0.1", host_port : Int = 1080)
+    super(host_addr, host_port)
+    connect(addr, port)
+  end
+
   def connect_host
     connection_request = ConnectionRequest.new
     write(connection_request.buffer)
@@ -44,7 +49,7 @@ class Socks < TCPSocket
     self
   end
 
-  def connect(addr : String, port : Int, host_addr : String = "127.0.0.1", host_port : Int = 1080)
+  def connect(addr : String, port : Int)
     connect_host
     connect_remote(addr, port)
   end
