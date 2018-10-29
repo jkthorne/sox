@@ -31,6 +31,7 @@ class Socks < TCPSocket
 
     connection_response = ConnectionResponse.new
     read(connection_response.buffer)
+    self
   end
 
   def connect_remote(addr : String, port : Int)
@@ -40,6 +41,12 @@ class Socks < TCPSocket
 
     reply = Reply.new
     read(reply.buffer)
+    self
+  end
+
+  def connect(addr : String, port : Int, host_addr : String = "127.0.0.1", host_port : Int = 1080)
+    connect_host
+    connect_remote(addr, port)
   end
 end
 

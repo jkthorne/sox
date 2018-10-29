@@ -14,8 +14,7 @@ describe Socks do
       spawn { server.listen }
 
       socket = Socks.new("127.0.0.1", 1080)
-      socket.connect_host
-      socket.connect_remote("127.0.0.1", address.port)
+      socket.connect("127.0.0.1", address.port)
 
       headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
       request = HTTP::Request.new("GET", "/ping", headers)
@@ -32,8 +31,7 @@ describe Socks do
 
   it "tor" do
     socket = Socks.new("127.0.0.1", 9050)
-    socket.connect_host
-    socket.connect_remote("93.184.216.34", 80)
+    socket.connect("93.184.216.34", 80)
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)
