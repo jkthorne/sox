@@ -33,10 +33,8 @@ class Socks < TCPSocket
     read(connection_response.buffer)
   end
 
-  def connect_remote(addr, port)
-    request = Request.new
-    request.bind_addr = addr
-    request.bind_port = port
+  def connect_remote(addr : String, port : Int)
+    request = Request.new(addr: addr, port: port)
 
     write(request.buffer)
 

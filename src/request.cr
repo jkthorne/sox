@@ -1,15 +1,14 @@
 class Socks::Request
   property buffer
 
-  def initialize(reply = :connect)
+  def initialize(addr : String , port : Int)
     @buffer = Bytes.new(10)
+
     buffer[0] = VERSION
     buffer[1] = COMMAND::CONNECT
     buffer[3] = 1_u8
-    buffer[8] = 31_u8
-    buffer[9] = 144_u8
-    # buffer[8] = 0_u8   ## NOTE: Default port 80
-    # buffer[9] = 80_u8  #        cont
+    self.bind_addr = addr
+    self.bind_port = port
   end
 
   def version
