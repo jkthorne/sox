@@ -3,10 +3,9 @@ class Socks::Request
 
   def initialize(addr : String , port : Int)
     @buffer = Bytes.new(10)
-
     @buffer[0] = VERSION
     @buffer[1] = COMMAND::CONNECT
-    @buffer[3] = 1_u8
+    @buffer[3] = ADDR_TYPE::IPV4
     self.bind_addr = addr
     self.bind_port = port
   end

@@ -1,12 +1,22 @@
 class Socks::ConnectionResponse
+  MARK_BYTE = 255_u8
+
   property buffer
 
   def initialize
-    @buffer = Bytes.new(2)
+    @buffer = Bytes.new(2, MARK_BYTE)
+  end
+
+  def version
+    buffer[0]
+  end
+
+  def method
+    buffer[1]
   end
 
   def connected?
-    buffer[0] == VERSION && buffer[1] == 0_u8
+    version != MARK_BYTE && version == VERSION && method == AUTH::NO_AUTHENTICATION
   end
 
   def unconnected?

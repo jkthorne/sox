@@ -10,7 +10,7 @@ class Socks < TCPSocket
     USERNAME_PASSWORD     = 2_u8
     IANA                  = 3_u8 ## X'03' to X'7F' IANA ASSIGNED
     RESERVED              = 80_u8 ## o  X'80' to X'FE' RESERVED FOR PRIVATE METHODS
-    NO_ACCEPTABLE_METHODS = 0_255
+    NO_ACCEPTABLE_METHODS = 255_u8
   end
 
   module COMMAND
