@@ -60,6 +60,10 @@ class Socks::Reply
     message
   end
 
+  def size
+    buffer.size
+  end
+
   def inspect(io)
     io << "#<Socks::Reply version=#{version} reply=#{reply} "
     io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"

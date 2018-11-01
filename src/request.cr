@@ -92,6 +92,10 @@ class Socks::Request
     buffer[buffer.size - 2, 2]
   end
 
+  def size
+    buffer.size
+  end
+
   def inspect(io)
     io << "#<Socks::Request version=#{version} reply=#{reply} "
     io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"
