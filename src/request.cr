@@ -75,7 +75,7 @@ class Socks::Request
   end
 
   def bind_addr
-    buffer[4, 4]
+    buffer[4, buffer.size - 6]
   end
 
   def bind_port=(port_number : Int)
