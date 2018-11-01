@@ -1,11 +1,13 @@
 class Socks::Request
-  property buffer
+  DEFAULT_BYTE = 0_u8
+  IPV4_BUFFER = Bytes[VERSION, COMMAND::CONNECT, RESERVED, ADDR_TYPE::IPV4, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, 0_u8, 80_u8]
+  IPV6_BUFFER = Bytes[VERSION, COMMAND::CONNECT, RESERVED, ADDR_TYPE::IPV6, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, DEFAULT_BYTE, 0_u8, 80_u8]
+  DOMAIN_BUFFER = Bytes[VERSION, COMMAND::CONNECT, RESERVED, ADDR_TYPE::DOMAIN]
 
-  def initialize(addr : String , port : Int)
-    @buffer = Bytes.new(10)
-    @buffer[0] = VERSION
-    @buffer[1] = COMMAND::CONNECT
-    @buffer[3] = ADDR_TYPE::IPV4
+  property buffer : Bytes
+
+  def initialize(addr : String , port : Int = 80)
+    @buffer = IPV4_BUFFER
     self.bind_addr = addr
     self.bind_port = port
   end
