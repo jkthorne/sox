@@ -66,10 +66,13 @@ class Socks::Request
   end
 
   def bind_addr=(address : String)
-    if addr_type == ADDR_TYPE::IPV4
+    case addr_type
+    when ADDR_TYPE::IPV4
       address.split(".").each_with_index do |b, i|
         buffer[4 + i] = b.to_u8
       end
+    when ADDR_TYPE::IPV6   #TODO
+    when ADDR_TYPE::DOMAIN #TODO
     end
     bind_addr
   end

@@ -14,8 +14,13 @@ class Socks::ConnectionRequest
     buffer[0]
   end
 
-  def command=(command : Symbol)
-    case command
+  def command=(command new_command : UInt8)
+    buffer[1] = new_command
+    command
+  end
+
+  def command=(command new_command : Symbol)
+    case new_command
     when :connect
       buffer[1] = COMMAND::CONNECT
     when :bind
