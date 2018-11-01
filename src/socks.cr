@@ -49,7 +49,7 @@ class Socks < TCPSocket
 
     write(request.buffer)
 
-    reply = Reply.new
+    reply = Reply.new(buffer_size: request.buffer.size)
     read(reply.buffer)
     self
   end

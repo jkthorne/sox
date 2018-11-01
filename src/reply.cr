@@ -1,8 +1,8 @@
 class Socks::Reply
   property buffer
 
-  def initialize(buffer = Bytes.new(10))
-    @buffer = buffer
+  def initialize(buffer_size : Int = 10)
+    @buffer = Bytes.new(buffer_size)
   end
 
   def version
