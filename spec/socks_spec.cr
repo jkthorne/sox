@@ -1,10 +1,20 @@
 require "./spec_helper"
 
+private def ping_server
+  HTTP::Server.new do |context|
+    context.response.content_type = "text/plain"
+    if context.request.path == "/ping"
+      context.response.puts "pong"
+    end
+  end
+end
+
 describe Socks do
   it "smokes test" do
     begin
-      address = Factory.server.bind_unused_port "127.0.0.1"
-      spawn { Factory.server.listen }
+      server = ping_server
+      address = server.bind_unused_port "127.0.0.1"
+      spawn { server.try &.listen }
 
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: address.port)
 
@@ -17,7 +27,7 @@ describe Socks do
 
       response.not_nil!.body.chomp.should eq "pong"
     ensure
-      Factory.server.close
+      server.try &.close
     end
   end
 
