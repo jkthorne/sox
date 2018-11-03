@@ -1,6 +1,13 @@
 # socks
 
-This is a socks 5 implementatino
+Socks is a network proxy and can be used for proxying connections like your http clint or ssh connections.  "Socks" Socks is a generic Socks proxy library implementing all the features of the Socks specs.
+
+## Documentation
+
+For more ducumentation on the specs and usage of Socks itself look in the `./docs/` directory.
+
+## FEATURES
+- [ ] SocksV5
 
 ## Installation
 
