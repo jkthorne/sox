@@ -36,7 +36,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   socks:
-    GitHub: wontruefree/socks
+    gitlab: wontruefree/socks
 ```
 
 ## Usage
