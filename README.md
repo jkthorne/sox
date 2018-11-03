@@ -1,30 +1,33 @@
 # socks
 
-Socks is a network proxy and can be used for proxying connections like your http clint or ssh connections.  "Socks" Socks is a generic Socks proxy library implementing all the features of the Socks specs.
+Socks is a library for creating SOCKS clients and servers.  Socks is a network proxy and can proxy connections like HTTP requests or ssh connections.  
 
 ## Documentation
 
-For more ducumentation on the specs and usage of Socks itself look in the `./Documentation/` directory.
+For more documentation on the specs, this implementation is based on please read documents at  `./Documentation/specs.`
+
+For more documentation on the implementations of SOCKS, please read documents at  `./Documentation/`.
 
 ## FEATURES
-- SOCKSV5
-	- addr type
-		- [x] IPv4 connection
-		- [ ] IPv6 connection
-		- [ ] Domain connection
-	- Authentication
-		- [x] unauthentication
-		- [ ] GSS connection
-		- [ ] username and password
-		- [x] IANA unimplented in ssh
-	- command types
-		- [x] connect
-		- [x] bind
-		- [x] udp associate
-	- reply / response
-		- [x] reply server messages
-		- [x] connection response server messages
-- SOCKSV4
+- SOCKS5
+    - addr type
+        - [x] IPv4 connection
+        - [ ] IPv6 connection
+        - [ ] Domain connection
+    - Authentication
+        - [x] unauthentication
+        - [ ] GSS connection
+        - [ ] username and password
+        - [x] IANA unimplented in ssh
+    - command types
+        - [x] connect
+        - [x] bind
+        - [x] udp associate
+    - reply / response
+        - [x] reply server messages
+        - [x] connection response server messages
+- SOCKS4
+- SOCKS5 server
 
 ## Installation
 
@@ -33,14 +36,14 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   socks:
-    github: wontruefree/socks
+    GitHub: wontruefree/socks
 ```
 
 ## Usage
 
-This is a SOCKS Client so to make a connection you have to have a corisponding SOCKS server.  The eaisest one to use is ssh.
+A SOCKS Client so to make a connection you have to have a corresponding SOCKS server.  The easiest one to use is ssh.
 
-To startup a local ssh SOCKS server you can connect to yourself.
+To start up a local ssh SOCKS server you can connect to yourself.
 
 ```bash
 # Setup SOCKS on localhost
@@ -128,12 +131,11 @@ end
 
 ## Specs
 
-Before running specs you should add your public key to the authorized keys.
-This makes setting up a socks for testing eaiser.
+Before running specs you should add your public key to the authorized keys.  Please read below if you have not previously set up a socks server for testing.   Although I like Unit Test Spec SOCKS only use tools in the stdlib so this is written in spec style syntax.
 
 ### Runnning specs
 
-Please read below if you have not previuosly setup a socks server for testing.   Although I like Unit Test Spec SOCKS trys and only use tools in the stdlib so this is written in spec style syntax.
+To run the test suite use the spec command built into crystal.
 
 ```bash
 crystal spec
@@ -149,7 +151,7 @@ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 ```
 
 ### TOR
-There are some basic tests for a commenly used SOCKS5 server tor.
+There are some basic tests for a commonly used SOCKS5 server tor.
 
 #### Debian
 Install tor via apt.
