@@ -26,16 +26,17 @@ class Socks::ConnectionResponse
   def server_message
     if buffer.empty?
       "Server doesn't reply authentication"
-    elsif buffer[0] != 0o004 && buffer[0] != 0o005
-      "SOCKS version #{buffer[0]} not supported"
-    elsif buffer[1] != 0o000
-      "SOCKS authentication method #{buffer[1]} neither requested nor supported"
+    elsif ![V4, V5].includes? version
+      "SOCKS version #{version} not supported"
+    elsif ![AUTH::NO_AUTHENTICATION, AUTH::GSSAPI, AUTH::USERNAME_PASSWORD,
+           AUTH::IANA, AUTH::RESERVED, AUTH::NO_ACCEPTABLE_METHODS].includes? method
+      "SOCKS authentication method #{method} neither requested nor supported"
     else
       "Server connected"
     end
   end
 
   def inspect(io)
-    io << "#<Socks::Request version=#{buffer[0]} method=#{buffer[1]}>"
+    io << "#<Socks::Request version=#{version} method=#{method}>"
   end
 end
