@@ -4,9 +4,9 @@ Socks is a library for creating SOCKS clients and servers.  Socks is a network p
 
 ## Documentation
 
-For more documentation on the specs, this implementation is based on please read documents at  `./Documentation/specs.`
+For more documentation on the specs, this implementation is based on please read documents at  `./docs/specs.`
 
-For more documentation on the implementations of SOCKS, please read documents at  `./Documentation/`.
+For more documentation on the implementations of SOCKS, please read documents at  `./docs/`.
 
 ## FEATURES
 - SOCKS5
