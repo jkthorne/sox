@@ -27,3 +27,13 @@ Then in the other run
 ```bash
 crystal src/socks.cr
 ```
+
+## Specs
+Before running specs you should add your public key to the authorized keys.
+This makes setting up a socks for testing eaiser.
+
+```bash
+cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+```
+
+You will also need to start tor.

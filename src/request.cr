@@ -16,7 +16,7 @@ class Socks::Request
   property buffer : Bytes
 
   def initialize(addr : String , port : Int = 80)
-    @buffer = IPV4_BUFFER
+    @buffer = IPV4_BUFFER.clone
     self.addr = addr
     self.port = port
   end
@@ -71,12 +71,12 @@ class Socks::Request
     buffer[3]
   end
 
-  def addr=(address : String)
+  def addr=(addr new_addr : String)
     case addr_type
     when ADDR_TYPE::IPV4
-      address.split(".").each_with_index do |b, i|
+      new_addr.split(".").each_with_index { |b, i|
         buffer[4 + i] = b.to_u8
-      end
+      }
     when ADDR_TYPE::IPV6   #TODO
     when ADDR_TYPE::DOMAIN #TODO
     end

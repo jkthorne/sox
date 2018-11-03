@@ -3,9 +3,8 @@ require "./spec_helper"
 describe Socks::Request do
   it "default buffer" do
     expected_buffer = Socks::Request::IPV4_BUFFER
-    expected_buffer[-2] = 80_u8
 
-    actual_request = Socks::Request.new(addr: "127.0.0.1")
+    actual_request = Socks::Request.new(addr: "0.0.0.0", port: 0)
     
     actual_request.buffer.should eq expected_buffer
   end
@@ -44,17 +43,17 @@ describe Socks::Request do
 
     actual_request = Socks::Request.new("127.0.0.1")
 
-    # actual_request.addr_type = expected_addr_type
-    # actual_request.addr_type.should eq expected_addr_type
+    actual_request.addr_type = expected_addr_type
+    actual_request.addr_type.should eq expected_addr_type
 
-    # actual_request.addr_type = :domain
-    # actual_request.addr_type.should eq Socks::ADDR_TYPE::DOMAIN
+    actual_request.addr_type = :domain
+    actual_request.addr_type.should eq Socks::ADDR_TYPE::DOMAIN
   end
 
   it "sets addr" do
     expected_addr = "225.225.225.225"
     actual_request = Socks::Request.new("127.0.0.1")
-    
+
     actual_request.addr = expected_addr
     actual_request.addr.should eq expected_addr
   end
@@ -62,7 +61,7 @@ describe Socks::Request do
   it "sets port" do
     expected_port = 8888
     actual_request = Socks::Request.new("127.0.0.1")
-    
+
     actual_request.port = expected_port
     actual_request.port.should eq expected_port
   end
