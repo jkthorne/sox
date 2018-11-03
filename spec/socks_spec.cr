@@ -2,18 +2,11 @@ require "./spec_helper"
 
 describe Socks do
   it "smokes test" do
-    server = HTTP::Server.new do |context|
-      context.response.content_type = "text/plain"
-      if context.request.path == "/ping"
-        context.response.print "pong"
-      end
-    end
-
     begin
-      address = server.bind_unused_port "127.0.0.1"
-      spawn { server.listen }
+      address = Factory.server.bind_unused_port "127.0.0.1"
+      spawn { Factory.server.listen }
 
-      socket = Socks.new(host_addr: "127.0.0.1", host_port: 1080, addr: "127.0.0.1", port: address.port)
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: address.port)
 
       headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
       request = HTTP::Request.new("GET", "/ping", headers)
@@ -24,7 +17,7 @@ describe Socks do
 
       response.not_nil!.body.chomp.should eq "pong"
     ensure
-      server.close
+      Factory.server.close
     end
   end
 
