@@ -17,8 +17,8 @@ class Socks::Request
 
   def initialize(addr : String , port : Int = 80)
     @buffer = IPV4_BUFFER
-    self.bind_addr = addr
-    self.bind_port = port
+    self.addr = addr
+    self.port = port
   end
 
   def version=(version : Int)
@@ -42,16 +42,21 @@ class Socks::Request
     reply
   end
 
+  def reply=(command : UInt8)
+    buffer[1] = command
+  end
+
   def reply
     buffer[1]
   end
 
-  def reserved
-    buffer[2]
+  def addr_type=(addr_type : UInt8)
+    buffer[3] = addr_type
+    addr_type
   end
 
-  def addr_type=(addr_type : Symbol = :ipv4)
-    case addr_type
+  def addr_type=(addr_type new_addr_type : Symbol = :ipv4)
+    case new_addr_type
     when :ipv4
       buffer[3] = ADDR_TYPE::IPV4
     when :ipv6
@@ -66,7 +71,7 @@ class Socks::Request
     buffer[3]
   end
 
-  def bind_addr=(address : String)
+  def addr=(address : String)
     case addr_type
     when ADDR_TYPE::IPV4
       address.split(".").each_with_index do |b, i|
@@ -75,21 +80,27 @@ class Socks::Request
     when ADDR_TYPE::IPV6   #TODO
     when ADDR_TYPE::DOMAIN #TODO
     end
-    bind_addr
+    addr
   end
 
-  def bind_addr
-    buffer[4, buffer.size - 6]
+  def addr
+    case addr_type
+    when ADDR_TYPE::IPV4
+      buffer[4, buffer.size - 6].join(".")
+    when ADDR_TYPE::IPV6   #TODO
+    when ADDR_TYPE::DOMAIN #TODO
+    end
   end
 
-  def bind_port=(port_number : Int)
+  def port=(port_number : Int)
     port_buffer = buffer[buffer.size - 2, 2].to_slice
     IO::ByteFormat::NetworkEndian.encode(port_number.to_u16, port_buffer)
-    bind_port
+    port
   end
 
-  def bind_port
-    buffer[buffer.size - 2, 2]
+  def port
+    port_buffer = buffer[buffer.size - 2, 2].to_slice
+    IO::ByteFormat::NetworkEndian.decode(Int16, port_buffer)
   end
 
   def size
@@ -98,6 +109,6 @@ class Socks::Request
 
   def inspect(io)
     io << "#<Socks::Request version=#{version} reply=#{reply} "
-    io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"
+    io << "addr_type=#{addr_type} addr=#{addr} port=#{port}>"
   end
 end
