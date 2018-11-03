@@ -1,5 +1,5 @@
 class Socks::Reply
-  property buffer
+  property buffer : Bytes
 
   def initialize(buffer_size : Int = 10)
     @buffer = Bytes.new(buffer_size)
@@ -13,30 +13,32 @@ class Socks::Reply
     buffer[1]
   end
 
-  def reserved
-    buffer[2]
-  end
-
   def addr_type
     buffer[3]
   end
 
-  def bind_addr
-    buffer[4, buffer.size - 6]
+  def addr
+    case addr_type
+    when ADDR_TYPE::IPV4
+      buffer[4, buffer.size - 6].join(".")
+    when ADDR_TYPE::IPV6   #TODO
+    when ADDR_TYPE::DOMAIN #TODO
+    end
   end
 
-  def bind_port
-    buffer[buffer.size - 2, 2]
+  def port
+    port_buffer = buffer[buffer.size - 2, 2].to_slice
+    IO::ByteFormat::NetworkEndian.decode(Int16, port_buffer)
   end
 
   def server_message
     message = "Unknown State"
 
-    message = "Server doesn't reply" if buffer.empty?
-    message = "SOCKS version #{buffer[0]} is not 5" if buffer[0] != VERSION
-    message = "NOT IPv4" if buffer[3] != 0o001
+    return "Server doesn't reply" if buffer.empty?
+    return "SOCKS version #{version} is not supported" if ![V4, V5].includes?(version)
+    return "ADDR type not supported" if ![ADDR_TYPE::IPV4, ADDR_TYPE::IPV6, ADDR_TYPE::DOMAIN].includes?(addr_type)
 
-    case buffer[1]
+    case reply
     when 0_u8
       message = "succeeded"
     when 1_u8
@@ -66,6 +68,6 @@ class Socks::Reply
 
   def inspect(io)
     io << "#<Socks::Reply version=#{version} reply=#{reply} "
-    io << "addr_type=#{addr_type} bind_addr=#{bind_addr} bind_port=#{bind_port}>"
+    io << "addr_type=#{addr_type} addr=#{addr} port=#{port}>"
   end
 end
