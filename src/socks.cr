@@ -27,7 +27,7 @@ class Socks < TCPSocket
     DOMAIN = 3_u8
   end
 
-  def initialize(addr : String, port : Int, host_addr : String = "127.0.0.1", host_port : Int = 1080)
+  def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080)
     super(host_addr, host_port)
     connect(addr, port)
   end

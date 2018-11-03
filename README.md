@@ -37,6 +37,7 @@ dependencies:
 ```
 
 ## Usage
+
 This is a SOCKS Client so to make a connection you have to have a corisponding SOCKS server.  The eaisest one to use is ssh.
 
 To startup a local ssh SOCKS server you can connect to yourself.
@@ -59,7 +60,7 @@ To open a socks connection and send a basic HTTP request and get a response.
 ```crystal
 require "socks"
 
-socket = Socks.new(addr: "52.85.89.35", port: 80)
+socket = Socks.new(addr: "52.85.89.35")
 request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
 
 request.to_io(socket)
@@ -71,7 +72,62 @@ if response.success?
 end
 ```
 
+### Remote server connnection
+
+To open a connection to a remote SOCKS5 Server.
+
+
+```crystal
+require "socks"
+
+socket = Socks.new(host_addr: "gateway.com", addr: "52.85.89.35")
+request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
+
+request.to_io(socket)
+socket.flush
+
+response = HTTP::Client::Response.from_io?(socket)
+if response.success?
+  puts "Got to crystal through SOCKS5!!!"
+end
+```
+
+### Connection using none default ports
+
+Sometimes you connect to web servers or remote SOCKS servers on ports that are not default.  This is built into the top level interface no having to deal with requests or connection requests directly.
+
+```crystal
+require "socks"
+
+socket = Socks.new(host_addr: "gateway.com" host_port: 8010, addr: "52.85.89.35", port: 3000)
+request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
+
+request.to_io(socket)
+socket.flush
+
+response = HTTP::Client::Response.from_io?(socket)
+if response.success?
+  puts "Got to crystal through SOCKS5!!!"
+end
+```
+
+### Use the raw socket
+
+sending some raw data over the socket.
+
+```crystal
+require "socks"
+
+socket = Socks.new(addr: "127.0.0.1")
+socket << "ping"
+
+if socket.gets == "pong"
+  puts "hello SOCKS!!"
+end
+```
+
 ## Specs
+
 Before running specs you should add your public key to the authorized keys.
 This makes setting up a socks for testing eaiser.
 
