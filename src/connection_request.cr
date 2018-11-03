@@ -1,11 +1,13 @@
 class Socks::ConnectionRequest
   property buffer : Bytes
 
-  def initialize
+  def initialize(version new_version : Int? = nil, command new_command : Symbol? = nil)
     @buffer = Bytes[VERSION, COMMAND::CONNECT, RESERVED]
+    self.version = new_version if new_version
+    self.command = new_command if new_command
   end
 
-  def version=(version : Int)
+  def version=(version : (Int | UInt8))
     buffer[0] = version.to_u8
     version
   end
