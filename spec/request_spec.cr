@@ -50,12 +50,26 @@ describe Socks::Request do
     actual_request.addr_type.should eq Socks::ADDR_TYPE::DOMAIN
   end
 
-  it "sets addr" do
-    expected_addr = "225.225.225.225"
-    actual_request = Socks::Request.new("127.0.0.1")
+  describe "addr" do
+    it "sets ipv4 addr" do
+      expected_addr = "225.225.225.225"
+      actual_request = Socks::Request.new("::1")
 
-    actual_request.addr = expected_addr
-    actual_request.addr.should eq expected_addr
+      actual_request.addr = expected_addr
+      actual_request.addr.should eq expected_addr
+    end
+
+    it "sets ipv6 addr" do
+      expected_addr = "0:0:0:0:0:0:0:1"
+      expected_addr_alt = "::1"
+      actual_request = Socks::Request.new("127.0.0.1")
+
+      actual_request.addr = expected_addr
+      actual_request.addr.should eq expected_addr
+
+      actual_request.addr = expected_addr_alt
+      actual_request.addr.should eq expected_addr
+    end
   end
 
   it "sets port" do
