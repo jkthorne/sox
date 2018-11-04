@@ -3,7 +3,9 @@ require "socket"
 class Socks < TCPSocket
   V4 = 4_u8
   V5 = 5_u8
-  RESERVED = 0_u8
+  BLANK_BYTE = 0_u8
+  RESERVED = BLANK_BYTE ## dont need to allocate more 0_u8
+  MARK_BYTE = 255_u8
 
   module AUTH
     NO_AUTHENTICATION     = 0_u8

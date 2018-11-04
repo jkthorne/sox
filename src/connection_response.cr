@@ -1,6 +1,4 @@
 class Socks::ConnectionResponse
-  MARK_BYTE = 255_u8
-
   property buffer
 
   def initialize
