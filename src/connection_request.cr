@@ -2,7 +2,7 @@ class Socks::ConnectionRequest
   property buffer : Bytes
 
   def initialize(version new_version : Int? = nil, command new_command : Symbol? = nil)
-    @buffer = Bytes[VERSION, COMMAND::CONNECT, RESERVED]
+    @buffer = Bytes[V5, COMMAND::CONNECT, RESERVED]
     self.version = new_version if new_version
     self.command = new_command if new_command
   end

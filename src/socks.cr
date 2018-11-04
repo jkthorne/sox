@@ -3,7 +3,6 @@ require "socket"
 class Socks < TCPSocket
   V4 = 4_u8
   V5 = 5_u8
-  VERSION = 5_u8
   RESERVED = 0_u8
 
   module AUTH

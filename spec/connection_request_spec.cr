@@ -4,7 +4,7 @@ describe Socks::ConnectionRequest do
   it "default buffer" do
     c_request = Socks::ConnectionRequest.new
     c_request.buffer.should eq Bytes[
-      Socks::VERSION, Socks::COMMAND::CONNECT, Socks::RESERVED
+      Socks::V5, Socks::COMMAND::CONNECT, Socks::RESERVED
     ]
   end
 

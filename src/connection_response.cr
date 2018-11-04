@@ -16,7 +16,7 @@ class Socks::ConnectionResponse
   end
 
   def connected?
-    version != MARK_BYTE && version == VERSION && method == AUTH::NO_AUTHENTICATION
+    version != MARK_BYTE && [V4, V5].includes?(version) && method == AUTH::NO_AUTHENTICATION
   end
 
   def unconnected?
