@@ -70,6 +70,14 @@ describe Socks::Request do
       actual_request.addr = expected_addr_alt
       actual_request.addr.should eq expected_addr
     end
+
+    it "sets domain addr" do
+      expected_addr = "www.example.com"
+      actual_request = Socks::Request.new("127.0.0.1")
+
+      actual_request.addr = expected_addr
+      actual_request.addr.should eq expected_addr
+    end
   end
 
   it "sets port" do

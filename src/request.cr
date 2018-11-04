@@ -10,7 +10,7 @@ class Socks::Request
     BLANK_BYTE, BLANK_BYTE, BLANK_BYTE, BLANK_BYTE, BLANK_BYTE,
     BLANK_BYTE, BLANK_BYTE
   ]
-  DOMAIN_BUFFER = Bytes[V5, COMMAND::CONNECT, RESERVED, ADDR_TYPE::DOMAIN]
+  DEFAULT_BUFFER = Bytes[V5, COMMAND::CONNECT, RESERVED, ADDR_TYPE::DOMAIN, BLANK_BYTE, BLANK_BYTE]
 
   property buffer : Bytes
 
@@ -21,7 +21,7 @@ class Socks::Request
     when Family::INET6
       @buffer = IPV6_BUFFER.clone
     else
-      @buffer = DOMAIN_BUFFER.clone
+      @buffer = DEFAULT_BUFFER.clone
     end
     self.addr = addr
     self.port = port
@@ -78,6 +78,18 @@ class Socks::Request
   end
 
   def addr=(addr new_addr : String)
+    if new_addr.scan(/[a-zA-Z]/).size > 0
+      new_buffer = Bytes.new(new_addr.size + 6)
+
+      buffer[0, 2].copy_to new_buffer[0, 2]                                 ## copy meta data
+      new_buffer[3] = ADDR_TYPE::DOMAIN                                     ## set addr type
+      new_addr.to_slice.copy_to(new_buffer[4, new_addr.to_slice.size])      ## copy domain
+      buffer[buffer.size - 2, 2].copy_to new_buffer[new_buffer.size - 2, 2] ## copy ports
+
+      @buffer = new_buffer
+      return addr
+    end
+
     ip_address = Socket::IPAddress.new(new_addr, port.to_i32)
 
     case ip_address.family
@@ -97,8 +109,8 @@ class Socks::Request
       {% else %}
         {% raise "Unsupported platform" %}
       {% end %}
-    else
     end
+
     addr
   end
 
@@ -115,7 +127,7 @@ class Socks::Request
       }
       Socket::IPAddress.new(new_addr.join(":"), port.to_i32).address
     when ADDR_TYPE::DOMAIN
-      String.new(buffer[4, buffer.size - (buffer.size - 4)])
+      String.new(buffer[4, buffer.size - 6])
     end
   end
 
