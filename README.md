@@ -21,7 +21,7 @@ For more documentation on the implementations of SOCKS, please read documents at
         - [x] IANA unimplented in ssh
     - command types
         - [x] connect
-        - [x] bind
+        - [ ] bind
         - [x] udp associate
     - reply / response
         - [x] reply server messages

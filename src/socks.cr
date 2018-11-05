@@ -29,10 +29,10 @@ class Socks < IPSocket
   end
 
   def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080,
-                 command : UInt8 = COMMAND::CONNECT)
+                 command : (UInt8|Symbol) = COMMAND::CONNECT)
     # super(host_addr, host_port)
 
-    if command == COMMAND::CONNECT
+    if command == COMMAND::CONNECT || command == :connect
       Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
@@ -41,7 +41,7 @@ class Socks < IPSocket
         end
       end
       main_connect(addr, port)
-    elsif command == COMMAND::UDP_ASSOCIATE
+    elsif command == COMMAND::UDP_ASSOCIATE || command == :udp
       Addrinfo.udp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
