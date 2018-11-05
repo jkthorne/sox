@@ -19,6 +19,44 @@ describe Socks::Reply do
     actual_response.port.should eq 0
   end
 
+  describe "#addr" do
+    it "ip4v addr" do
+      expected_bytes = default_bytes
+      actual_response = Socks::Reply.new
+
+      IO::Memory.new(expected_bytes).read(actual_response.buffer)
+
+      actual_response.addr.should eq "0.0.0.0"
+    end
+
+    it "ip6v addr" do
+      expected_bytes = Bytes[
+        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::IPV6,
+        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8
+    ].clone
+      actual_response = Socks::Reply.new(expected_bytes.size)
+
+      IO::Memory.new(expected_bytes).read(actual_response.buffer)
+
+      actual_response.addr.should eq "0:0:0:0:0:0:0:0"
+    end
+
+    it "domain addr" do
+      expected_bytes = Bytes[
+        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::DOMAIN,
+        119_u8, 119_u8, 119_u8, 46_u8, 101_u8, 120_u8, 97_u8,
+        109_u8, 112_u8, 108_u8, 101_u8, 46_u8, 99_u8, 111_u8,
+        109_u8, 0_u8, 0_u8
+      ].clone
+      actual_response = Socks::Reply.new(expected_bytes.size)
+
+      IO::Memory.new(expected_bytes).read(actual_response.buffer)
+
+      actual_response.addr.should eq "www.example.com"
+    end
+  end
+
   describe "#server_message" do
     it "supported versions" do
       expected_bytes = default_bytes
