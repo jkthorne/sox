@@ -8,33 +8,17 @@ describe Socks::ConnectionRequest do
     ]
   end
 
-  it "initializes with values" do
-    v_request = Socks::ConnectionRequest.new(version: 4_u8)
-    v_request.buffer.should eq Bytes[
+  it "initializes with version" do
+    c_request = Socks::ConnectionRequest.new(version: Socks::V4)
+    c_request.buffer.should eq Bytes[
       Socks::V4, Socks::COMMAND::CONNECT, Socks::RESERVED
     ]
+  end
 
-    c_request = Socks::ConnectionRequest.new(command: :bind)
+  it "initializes with version" do
+    c_request = Socks::ConnectionRequest.new(command: Socks::COMMAND::BIND)
     c_request.buffer.should eq Bytes[
       Socks::V5, Socks::COMMAND::BIND, Socks::RESERVED
     ]
-  end
-
-  it "sets versions" do
-    c_request = Socks::ConnectionRequest.new
-    c_request.version = 100_u8
-    c_request.version.should eq 100_u8
-    
-    c_request.version = 200
-    c_request.version.should eq 200_u8
-  end
-
-  it "sets command" do
-    c_request = Socks::ConnectionRequest.new
-    c_request.command = :udp
-    c_request.command.should eq Socks::COMMAND::UDP_ASSOCIATE
-    
-    c_request.command = Socks::COMMAND::BIND
-    c_request.command.should eq Socks::COMMAND::BIND
   end
 end
