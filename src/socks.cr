@@ -30,8 +30,6 @@ class Socks < IPSocket
 
   def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080,
                  command : (UInt8|Symbol) = COMMAND::CONNECT)
-    # super(host_addr, host_port)
-
     if command == COMMAND::CONNECT || command == :connect
       Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
