@@ -53,23 +53,17 @@ describe Socks do
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: bind_port,
                          command: Socks::COMMAND::BIND)
 
-      loop {
-        spawn {
-          begin
-            client = socket.accept
-      
-            while msg = client.read_line
-              client.puts msg
-            end
-          ensure
-            client.try &.close
-          end  
-        }
+      spawn {
+        client = socket.not_nil!.accept
+        client << "pong\n"
       }
 
-      response = HTTP::Client.get("http://127.0.0.1:#{SSH_PORT}")
-      pp! response.body.lines.first
+      client = TCPSocket.new("localhost", SSH_PORT)
+      client << "ping\n"
+      response = client.gets
     ensure
+      client.try &.close
+      socket.try &.close
     end
   end
 
