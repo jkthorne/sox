@@ -61,9 +61,6 @@ describe Socks do
       client = TCPSocket.new("localhost", SSH_PORT)
       client << "ping\n"
       response = client.gets
-    ensure
-      client.try &.close
-      socket.try &.close
     end
   end
 
