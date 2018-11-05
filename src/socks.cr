@@ -1,6 +1,8 @@
 require "socket"
 
 class Socks < IPSocket
+  include Socket::Server
+
   V4 = 4_u8
   V5 = 5_u8
   BLANK_BYTE = 0_u8
@@ -29,7 +31,7 @@ class Socks < IPSocket
   end
 
   def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080,
-                 command : COMMAND = COMMAND::CONNECT)
+                 command : COMMAND = COMMAND::CONNECT, backlog : Int = SOMAXCONN, reuse_port : Bool = false)
     if command == COMMAND::CONNECT
       Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
@@ -45,6 +47,23 @@ class Socks < IPSocket
         connect(addrinfo, timeout: nil) do |error|
           close
           error
+        end
+      end
+    elsif command == COMMAND::BIND
+      Addrinfo.tcp(addr, port, timeout: nil) do |addrinfo|
+        super(addrinfo.family, addrinfo.type, addrinfo.protocol)
+  
+        self.reuse_address = true
+        self.reuse_port = true if reuse_port
+  
+        if errno = bind(addrinfo) { |errno| errno }
+          close
+          next errno
+        end
+  
+        if errno = listen(backlog) { |errno| errno }
+          close
+          next errno
         end
       end
     else
@@ -88,15 +107,6 @@ class Socks < IPSocket
   def receive(message : Bytes) : {Int32, IPAddress}
     bytes_read, sockaddr, addrlen = recvfrom(message)
     {bytes_read, IPAddress.from(sockaddr, addrlen)}
-  end
-
-  def self.open(host, port)
-    sock = new(host, port)
-    begin
-      yield sock
-    ensure
-      sock.close
-    end
   end
 
   def tcp_nodelay?

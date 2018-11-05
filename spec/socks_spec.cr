@@ -1,18 +1,14 @@
 require "./spec_helper"
 
-private def ping_server
-  HTTP::Server.new do |context|
-    context.response.content_type = "text/plain"
-    if context.request.path == "/ping"
-      context.response.puts "pong"
-    end
-  end
-end
-
 describe Socks do
-  it "smokes test" do
+  it "connect" do
     begin
-      server = ping_server
+      server = HTTP::Server.new do |context|
+        context.response.content_type = "text/plain"
+        if context.request.path == "/ping"
+          context.response.puts "pong"
+        end
+      end
       address = server.bind_unused_port "127.0.0.1"
       spawn { server.try &.listen }
 
@@ -29,19 +25,6 @@ describe Socks do
     ensure
       server.try &.close
     end
-  end
-
-  it "tor" do
-    socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050, addr: "93.184.216.34", port: 80)
-
-    headers = HTTP::Headers{"Host" => "www.example.com"}
-    request = HTTP::Request.new("GET", "/", headers)
-
-    request.to_io(socket)
-    socket.flush
-    response = HTTP::Client::Response.from_io?(socket)
-
-    response.not_nil!.success?.should be_true
   end
 
   it "udp" do
@@ -62,5 +45,44 @@ describe Socks do
       socket.try &.close
       server.try &.close
     end
+  end
+
+  it "bind" do
+    begin
+      bind_port = rand(8000..10000)
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: bind_port,
+                         command: Socks::COMMAND::BIND)
+
+      loop {
+        spawn {
+          begin
+            client = socket.accept
+      
+            while msg = client.read_line
+              client.puts msg
+            end
+          ensure
+            client.try &.close
+          end  
+        }
+      }
+
+      response = HTTP::Client.get("http://127.0.0.1:#{SSH_PORT}")
+      pp! response.body.lines.first
+    ensure
+    end
+  end
+
+  it "tor" do
+    socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050, addr: "93.184.216.34", port: 80)
+
+    headers = HTTP::Headers{"Host" => "www.example.com"}
+    request = HTTP::Request.new("GET", "/", headers)
+
+    request.to_io(socket)
+    socket.flush
+    response = HTTP::Client::Response.from_io?(socket)
+
+    response.not_nil!.success?.should be_true
   end
 end
