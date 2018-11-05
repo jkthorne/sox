@@ -1,23 +1,23 @@
 class Socks::Request
   property buffer : Bytes
 
-  def initialize(addr : String , port : Int = 80, version : UInt8 = V5, command : UInt8 = COMMAND::CONNECT)
+  def initialize(addr : String , port : Int = 80, version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
     if addr.scan(/[a-zA-Z]/).size > 0
       @buffer = Bytes.new(addr.size + 6)
-      @buffer[3] = ADDR_TYPE::DOMAIN
+      @buffer[3] = ADDR_TYPE::DOMAIN.value
       addr.to_slice.copy_to(@buffer[4, addr.to_slice.size])
     else
       ip_address = Socket::IPAddress.new(addr, port)
       case ip_address.family
       when Family::INET
         @buffer = Bytes.new(10)
-        @buffer[3] = ADDR_TYPE::IPV4
+        @buffer[3] = ADDR_TYPE::IPV4.value
         ip_address.address.split(".").each_with_index { |b, i|
           @buffer[4 + i] = b.to_u8
         }
       when Family::INET6
         @buffer = Bytes.new(22)
-        @buffer[3] = ADDR_TYPE::IPV6
+        @buffer[3] = ADDR_TYPE::IPV6.value
         {% if flag?(:darwin) || flag?(:openbsd) || flag?(:freebsd) %}
           ip_address.@addr6.not_nil!.__u6_addr.__u6_addr8.to_slice.copy_to @buffer[4, 16]
         {% elsif flag?(:linux) && flag?(:musl) %}
@@ -33,10 +33,10 @@ class Socks::Request
     end
 
     ## Set Socks version
-    @buffer.[0] = version
+    @buffer[0] = version
 
     ## Set Socks command
-    @buffer.[1] = command
+    @buffer[1] = command.value
 
     ## Set port
     IO::ByteFormat::NetworkEndian.encode(
@@ -49,7 +49,7 @@ class Socks::Request
   end
 
   def reply
-    buffer[1]
+    COMMAND.from_value?(buffer[1])
   end
 
   def addr_type=(addr_type new_addr_type : Symbol = :ipv4)
@@ -65,7 +65,7 @@ class Socks::Request
   end
 
   def addr_type
-    buffer[3]
+    ADDR_TYPE.from_value?(buffer[3])
   end
 
   def addr

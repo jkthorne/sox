@@ -10,11 +10,11 @@ class Socks::Reply
   end
 
   def reply
-    buffer[1]
+    COMMAND.from_value?(buffer[1])
   end
 
   def addr_type
-    buffer[3]
+    ADDR_TYPE.from_value?(buffer[3])
   end
 
   def addr
@@ -44,9 +44,9 @@ class Socks::Reply
 
     return "Server doesn't reply" if buffer.empty?
     return "SOCKS version #{version} is not supported" if ![V4, V5].includes?(version)
-    return "ADDR type not supported" if ![ADDR_TYPE::IPV4, ADDR_TYPE::IPV6, ADDR_TYPE::DOMAIN].includes?(addr_type)
+    return "ADDR type not supported" if !ADDR_TYPE.values.includes?(addr_type)
 
-    case reply
+    case buffer[2]
     when 0_u8
       message = "succeeded"
     when 1_u8

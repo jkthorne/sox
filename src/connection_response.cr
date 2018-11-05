@@ -10,7 +10,7 @@ class Socks::ConnectionResponse
   end
 
   def method
-    buffer[1]
+    Socks::AUTH.from_value?(buffer[1])
   end
 
   def connected?
@@ -26,9 +26,8 @@ class Socks::ConnectionResponse
       "Server doesn't reply authentication"
     elsif ![V4, V5].includes? version
       "SOCKS version #{version} not supported"
-    elsif ![AUTH::NO_AUTHENTICATION, AUTH::GSSAPI, AUTH::USERNAME_PASSWORD,
-           AUTH::IANA, AUTH::RESERVED, AUTH::NO_ACCEPTABLE_METHODS].includes? method
-      "SOCKS authentication method #{method} neither requested nor supported"
+    elsif !AUTH.values.includes? method
+      "SOCKS authentication method #{buffer[1]} neither requested nor supported"
     else
       "Server connected"
     end

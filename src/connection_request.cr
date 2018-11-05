@@ -1,8 +1,8 @@
 class Socks::ConnectionRequest
   property buffer : Bytes
 
-  def initialize(version : UInt8 = V5, command : UInt8 = COMMAND::CONNECT)
-    @buffer = Bytes[version, command, RESERVED]
+  def initialize(version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
+    @buffer = Bytes[version, command.value, RESERVED]
   end
 
   def version

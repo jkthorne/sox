@@ -2,7 +2,7 @@ require "./spec_helper"
 
 private def default_bytes
   Bytes[
-    Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::IPV4,
+    Socks::V5, Socks::COMMAND::CONNECT, 0_u8, Socks::ADDR_TYPE::IPV4,
     0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
   ].clone
 end
@@ -14,7 +14,7 @@ describe Socks::Reply do
     IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
     actual_response.version.should eq Socks::V5
-    actual_response.reply.should eq 0_u8
+    actual_response.reply.should eq Socks::COMMAND::CONNECT
     actual_response.addr.should eq "0.0.0.0"
     actual_response.port.should eq 0
   end
@@ -92,7 +92,7 @@ describe Socks::Reply do
     it "supported general failure" do
       expected_bytes = default_bytes
       expected_reply = 1_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -103,7 +103,7 @@ describe Socks::Reply do
     it "supported connection rulesets" do
       expected_bytes = default_bytes
       expected_reply = 2_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -114,7 +114,7 @@ describe Socks::Reply do
     it "supported Network unreachable" do
       expected_bytes = default_bytes
       expected_reply = 3_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -125,7 +125,7 @@ describe Socks::Reply do
     it "supported Host unreachable" do
       expected_bytes = default_bytes
       expected_reply = 4_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -136,7 +136,7 @@ describe Socks::Reply do
     it "supported Connection refused" do
       expected_bytes = default_bytes
       expected_reply = 5_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -147,7 +147,7 @@ describe Socks::Reply do
     it "supported TTL expired" do
       expected_bytes = default_bytes
       expected_reply = 6_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -158,7 +158,7 @@ describe Socks::Reply do
     it "supported TTL expired" do
       expected_bytes = default_bytes
       expected_reply = 6_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -169,7 +169,7 @@ describe Socks::Reply do
     it "supported Command not supported" do
       expected_bytes = default_bytes
       expected_reply = 7_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -180,7 +180,7 @@ describe Socks::Reply do
     it "supported Address type not supported" do
       expected_bytes = default_bytes
       expected_reply = 8_u8
-      expected_bytes[1] = expected_reply
+      expected_bytes[2] = expected_reply
       actual_response = Socks::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)

@@ -7,7 +7,7 @@ class Socks < IPSocket
   RESERVED = BLANK_BYTE            ## dont need to allocate more 0_u8
   MARK_BYTE = 255_u8
 
-  module AUTH
+  enum AUTH : UInt8
     NO_AUTHENTICATION     = 0_u8
     GSSAPI                = 1_u8
     USERNAME_PASSWORD     = 2_u8
@@ -16,21 +16,21 @@ class Socks < IPSocket
     NO_ACCEPTABLE_METHODS = 255_u8
   end
 
-  module COMMAND
+  enum COMMAND : UInt8
     CONNECT       = 1_u8
     BIND          = 2_u8
     UDP_ASSOCIATE = 3_u8
   end
 
-  module ADDR_TYPE
+  enum ADDR_TYPE : UInt8
     IPV4   = 1_u8
     IPV6   = 4_u8
     DOMAIN = 3_u8
   end
 
   def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080,
-                 command : (UInt8|Symbol) = COMMAND::CONNECT)
-    if command == COMMAND::CONNECT || command == :connect
+                 command : COMMAND = COMMAND::CONNECT)
+    if command == COMMAND::CONNECT
       Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
@@ -39,7 +39,7 @@ class Socks < IPSocket
         end
       end
       main_connect(addr, port)
-    elsif command == COMMAND::UDP_ASSOCIATE || command == :udp
+    elsif command == COMMAND::UDP_ASSOCIATE
       Addrinfo.udp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
