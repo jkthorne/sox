@@ -75,12 +75,6 @@ class Socks < IPSocket
     self
   end
 
-  # def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1",
-  #   host_port : Int = 1080, command : UInt8 = COMMAND::CONNECT)
-  # super(Family::INET, Type::DGRAM, Protocol::UDP)
-  # connect(addr, port)
-  # end
-
   def receive(max_message_size = 512) : {String, IPAddress}
     address = nil
     message = String.new(max_message_size) do |buffer|
