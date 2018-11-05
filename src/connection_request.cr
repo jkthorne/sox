@@ -10,7 +10,7 @@ class Socks::ConnectionRequest
   end
 
   def command
-    buffer[1]
+    COMMAND.from_value?(buffer[1])
   end
 
   def inspect(io)
