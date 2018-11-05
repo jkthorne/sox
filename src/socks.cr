@@ -108,7 +108,6 @@ class Socks < IPSocket
   end
 
   {% unless flag?(:openbsd) %}
-    # The amount of time in seconds the connection must be idle before sending keepalive probes.
     def tcp_keepalive_idle
       optname = {% if flag?(:darwin) %}
         LibC::TCP_KEEPALIVE

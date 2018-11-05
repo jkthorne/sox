@@ -50,12 +50,11 @@ describe Socks do
       server = UDPSocket.new
       address = server.bind "127.0.0.1", udp_port
 
-      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: udp_port,
-                          command: Socks::COMMAND::UDP_ASSOCIATE)
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: udp_port, 
+                         command: Socks::COMMAND::UDP_ASSOCIATE)
 
       socket.connect "127.0.0.1", udp_port
       socket.send "yolo"
-
       message, client_addr = server.receive
 
       message.should eq "yolo"
