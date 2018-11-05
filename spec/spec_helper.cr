@@ -1,5 +1,6 @@
 require "spec"
 require "../src/socks"
+
 require "http/server"
 
 SSH_PORT = rand(8000..10000)

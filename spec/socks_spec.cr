@@ -43,4 +43,25 @@ describe Socks do
 
     response.not_nil!.success?.should be_true
   end
+
+  it "udp" do
+    begin
+      udp_port = rand(8000..10000)
+      server = UDPSocket.new
+      address = server.bind "127.0.0.1", udp_port
+
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: udp_port,
+                          command: Socks::COMMAND::UDP_ASSOCIATE)
+
+      socket.connect "127.0.0.1", udp_port
+      socket.send "yolo"
+
+      message, client_addr = server.receive
+
+      message.should eq "yolo"
+    ensure
+      socket.try &.close
+      server.try &.close
+    end
+  end
 end
