@@ -12,8 +12,8 @@ For more documentation on the implementations of SOCKS, please read documents at
 - SOCKS5
     - addr type
         - [x] IPv4 connection
-        - [ ] IPv6 connection
-        - [ ] Domain connection
+        - [x] IPv6 connection
+        - [x] Domain connection
     - Authentication
         - [x] unauthentication
         - [ ] GSS connection
