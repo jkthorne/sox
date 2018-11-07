@@ -3,9 +3,10 @@ class Socks::Request
 
   def initialize(addr : String , port : Int = 80, version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
     if addr.scan(/[a-zA-Z]/).size > 0
-      @buffer = Bytes.new(addr.size + 6)
+      @buffer = Bytes.new(addr.size + 7)
       @buffer[3] = ADDR_TYPE::DOMAIN.value
-      addr.to_slice.copy_to(@buffer[4, addr.to_slice.size])
+      @buffer[4] = addr.to_slice.size.to_u8
+      addr.to_slice.copy_to(@buffer[5, addr.to_slice.size])
     else
       ip_address = Socket::IPAddress.new(addr, port)
       case ip_address.family

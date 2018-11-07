@@ -1,6 +1,20 @@
 require "./spec_helper"
 
 describe Socks do
+  it "smoke" do
+    socket = Socks.new(host_addr: "127.0.0.1", host_port: 1080,
+                       addr: "www.example.com", port: 80)
+
+    headers = HTTP::Headers{"Host" => "www.example.com"}
+    request = HTTP::Request.new("GET", "/", headers)
+
+    request.to_io(socket)
+    socket.flush
+    response = HTTP::Client::Response.from_io?(socket)
+
+    response.not_nil!.body.chomp.should eq "doc"
+  end
+
   it "connect" do
     begin
       server = HTTP::Server.new do |context|
@@ -12,7 +26,8 @@ describe Socks do
       address = server.bind_unused_port "127.0.0.1"
       spawn { server.try &.listen }
 
-      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: address.port)
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
+                         addr: "127.0.0.1", port: address.port)
 
       headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
       request = HTTP::Request.new("GET", "/ping", headers)
@@ -33,7 +48,8 @@ describe Socks do
       server = UDPSocket.new
       address = server.bind "127.0.0.1", udp_port
 
-      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: udp_port, 
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
+                         addr: "127.0.0.1", port: udp_port,
                          command: Socks::COMMAND::UDP_ASSOCIATE)
 
       socket.connect "127.0.0.1", udp_port
@@ -50,7 +66,8 @@ describe Socks do
   it "bind" do
     begin
       bind_port = rand(8000..10000)
-      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT, addr: "127.0.0.1", port: bind_port,
+      socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
+                         addr: "127.0.0.1", port: bind_port,
                          command: Socks::COMMAND::BIND)
 
       spawn {
@@ -65,7 +82,8 @@ describe Socks do
   end
 
   it "tor" do
-    socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050, addr: "93.184.216.34", port: 80)
+    socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050,
+                       addr: "93.184.216.34", port: 80)
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)

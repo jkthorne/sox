@@ -52,15 +52,15 @@ class Socks < IPSocket
     elsif command == COMMAND::BIND
       Addrinfo.tcp(addr, port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
-  
+
         self.reuse_address = true
         self.reuse_port = true if reuse_port
-  
+
         if errno = bind(addrinfo) { |errno| errno }
           close
           next errno
         end
-  
+
         if errno = listen(backlog) { |errno| errno }
           close
           next errno
