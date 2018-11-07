@@ -173,6 +173,3 @@ require "./connection_request.cr"
 require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
-
-require "./socks/client.cr"
-require "./socks/udp.cr"

@@ -67,6 +67,7 @@ describe Socks do
   it "bind" do
     begin
       bind_port = rand(8000..10000)
+      client = TCPSocket.new("localhost", SSH_PORT)
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
                          addr: "127.0.0.1", port: bind_port,
                          command: Socks::COMMAND::BIND)
@@ -76,7 +77,6 @@ describe Socks do
         client << "pong\n"
       }
 
-      client = TCPSocket.new("localhost", SSH_PORT)
       client << "ping\n"
       response = client.gets
     end
