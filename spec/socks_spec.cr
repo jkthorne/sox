@@ -21,7 +21,7 @@ describe Socks do
       server = HTTP::Server.new do |context|
         context.response.content_type = "text/plain"
         if context.request.path == "/ping"
-          context.response.puts "pong"
+          context.response << "pong"
         end
       end
       address = server.bind_unused_port "127.0.0.1"
@@ -37,7 +37,7 @@ describe Socks do
       socket.flush
       response = HTTP::Client::Response.from_io?(socket)
 
-      response.not_nil!.body.chomp.should eq "pong"
+      response.not_nil!.body.should eq "pong"
     ensure
       server.try &.close
     end

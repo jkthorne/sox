@@ -58,6 +58,9 @@ ssh -D 1080 -C -N user@remote.com
 ```
 
 ### Basic Usage
+
+#### Basic Socket
+
 To open a socks connection and send a basic HTTP request and get a response.
 
 ```crystal
@@ -73,6 +76,49 @@ response = HTTP::Client::Response.from_io?(socket)
 if response.success?
   puts "Got to crystal through SOCKS5!!!"
 end
+```
+
+#### Basic Client
+
+`Socks::Client` functions almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+
+```crystal
+client = Socks::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
+response = client.get("/")
+puts response.status_code      # => 200
+puts response.body.lines.first # => "<!doctype html>"
+client.close
+```
+
+#### Basic UDP
+
+`Socks::UDP` functions almost like the Crystal (UDPSocket)[https://crystal-lang.org/api/latest/UDPSocket.html]
+
+```crystal
+server = UDPSocket.new
+server.bind "localhost", 9999
+
+client = Socks::UDP.new(host_addr: "127.0.0.1", host_port: 1080)
+client.connect "localhost", 9999
+
+client.send "message"
+message, client_addr = server.receive
+
+message     # => "message"
+client_addr # => Socket::IPAddress(127.0.0.1:50516)
+
+client.close
+server.close
+```
+
+you can use `Socks::Client` almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+
+```crystal
+client = Socks::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
+response = client.get("/")
+puts response.status_code      # => 200
+puts response.body.lines.first # => "<!doctype html>"
+client.close
 ```
 
 ### Remote server connnection

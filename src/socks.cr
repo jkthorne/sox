@@ -71,6 +71,18 @@ class Socks < IPSocket
     end
   end
 
+  def self.udp(*args)
+    UDP.new(*args)
+  end
+
+  def self.client(*args)
+    Client.new(*args)
+  end
+
+  def self.server(*args)
+    Server.new(*args)
+  end
+
   def main_connect(addr : String, port : Int)
     connect_host
     connect_remote(addr, port)
@@ -161,3 +173,6 @@ require "./connection_request.cr"
 require "./connection_response.cr"
 require "./request.cr"
 require "./reply.cr"
+
+require "./socks/client.cr"
+require "./socks/udp.cr"
