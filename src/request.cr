@@ -82,7 +82,7 @@ class Socks::Request
       }
       Socket::IPAddress.new(new_addr.join(":"), port.to_i32).address
     when ADDR_TYPE::DOMAIN
-      String.new(buffer[4, buffer.size - 6])
+      String.new(buffer[5, buffer[4]])
     end
   end
 

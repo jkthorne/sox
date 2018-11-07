@@ -12,7 +12,8 @@ describe Socks do
     socket.flush
     response = HTTP::Client::Response.from_io?(socket)
 
-    response.not_nil!.body.chomp.should eq "doc"
+    response.try &.status_code.should eq 200
+    response.try &.body.lines.first.should eq "<!doctype html>"
   end
 
   it "connect" do

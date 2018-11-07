@@ -44,7 +44,7 @@ describe Socks::Reply do
 
     it "domain addr" do
       expected_bytes = Bytes[
-        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::DOMAIN,
+        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::DOMAIN, 15_u8,
         119_u8, 119_u8, 119_u8, 46_u8, 101_u8, 120_u8, 97_u8,
         109_u8, 112_u8, 108_u8, 101_u8, 46_u8, 99_u8, 111_u8,
         109_u8, 0_u8, 0_u8
