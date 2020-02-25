@@ -3,7 +3,7 @@ require "./spec_helper"
 describe Socks do
   it "smoke" do
     socket = Socks.new(host_addr: "127.0.0.1", host_port: 1080,
-                       addr: "www.example.com", port: 80)
+      addr: "www.example.com", port: 80)
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)
@@ -28,7 +28,7 @@ describe Socks do
       spawn { server.try &.listen }
 
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
-                         addr: "127.0.0.1", port: address.port)
+        addr: "127.0.0.1", port: address.port)
 
       headers = HTTP::Headers{"Host" => "127.0.0.1:#{address.port}"}
       request = HTTP::Request.new("GET", "/ping", headers)
@@ -50,8 +50,8 @@ describe Socks do
       address = server.bind "127.0.0.1", udp_port
 
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
-                         addr: "127.0.0.1", port: udp_port,
-                         command: Socks::COMMAND::UDP_ASSOCIATE)
+        addr: "127.0.0.1", port: udp_port,
+        command: Socks::COMMAND::UDP_ASSOCIATE)
 
       socket.connect "127.0.0.1", udp_port
       socket.send "yolo"
@@ -69,8 +69,8 @@ describe Socks do
       bind_port = rand(8000..10000)
       client = TCPSocket.new("localhost", SSH_PORT)
       socket = Socks.new(host_addr: "127.0.0.1", host_port: SSH_PORT,
-                         addr: "127.0.0.1", port: bind_port,
-                         command: Socks::COMMAND::BIND)
+        addr: "127.0.0.1", port: bind_port,
+        command: Socks::COMMAND::BIND)
 
       spawn {
         client = socket.not_nil!.accept
@@ -84,7 +84,7 @@ describe Socks do
 
   it "tor" do
     socket = Socks.new(host_addr: "127.0.0.1", host_port: 9050,
-                       addr: "93.184.216.34", port: 80)
+      addr: "93.184.216.34", port: 80)
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)

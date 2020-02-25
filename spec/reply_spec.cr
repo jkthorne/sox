@@ -33,8 +33,8 @@ describe Socks::Reply do
       expected_bytes = Bytes[
         Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::IPV6,
         0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8
-    ].clone
+        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+      ].clone
       actual_response = Socks::Reply.new(expected_bytes.size)
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
@@ -47,7 +47,7 @@ describe Socks::Reply do
         Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::DOMAIN, 15_u8,
         119_u8, 119_u8, 119_u8, 46_u8, 101_u8, 120_u8, 97_u8,
         109_u8, 112_u8, 108_u8, 101_u8, 46_u8, 99_u8, 111_u8,
-        109_u8, 0_u8, 0_u8
+        109_u8, 0_u8, 0_u8,
       ].clone
       actual_response = Socks::Reply.new(expected_bytes.size)
 

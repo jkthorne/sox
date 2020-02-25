@@ -4,11 +4,11 @@ describe Socks::Request do
   it "default buffer" do
     expected_buffer = Bytes[
       Socks::V5, Socks::COMMAND::CONNECT, 0_u8, Socks::ADDR_TYPE::IPV4,
-      0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8
+      0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
     ]
 
     actual_request = Socks::Request.new(addr: "0.0.0.0", port: 0)
-    
+
     actual_request.buffer.should eq expected_buffer
   end
 
@@ -18,7 +18,7 @@ describe Socks::Request do
       expected_port = 8888
 
       actual_request = Socks::Request.new(addr: expected_addr, port: expected_port)
-      
+
       actual_request.addr.should eq expected_addr
       actual_request.port.should eq expected_port
     end
@@ -26,7 +26,7 @@ describe Socks::Request do
     it "sets versions" do
       expected_version = Socks::V4
       actual_request = Socks::Request.new("127.0.0.1", version: expected_version)
-      
+
       actual_request.version.should eq expected_version
     end
 

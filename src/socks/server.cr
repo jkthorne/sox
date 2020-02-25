@@ -10,4 +10,3 @@ class HTTP::Server
     tcp_server.local_address
   end
 end
-

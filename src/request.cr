@@ -1,7 +1,7 @@
 class Socks::Request
   property buffer : Bytes
 
-  def initialize(addr : String , port : Int = 80, version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
+  def initialize(addr : String, port : Int = 80, version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
     if addr.scan(/[a-zA-Z]/).size > 0
       @buffer = Bytes.new(addr.size + 7)
       @buffer[3] = ADDR_TYPE::DOMAIN.value
@@ -33,13 +33,13 @@ class Socks::Request
       end
     end
 
-    ## Set Socks version
+    # # Set Socks version
     @buffer[0] = version
 
-    ## Set Socks command
+    # # Set Socks command
     @buffer[1] = command.value
 
-    ## Set port
+    # # Set port
     IO::ByteFormat::NetworkEndian.encode(
       port.to_u16, @buffer.[@buffer.size - 2, 2].to_slice
     )
@@ -76,7 +76,7 @@ class Socks::Request
     when ADDR_TYPE::IPV6
       new_addr = [] of Int32
       buffer[4, 16].each_cons(9) { |slice|
-        new_addr << slice.reduce(0) { |a,i|
+        new_addr << slice.reduce(0) { |a, i|
           a + i
         }
       }

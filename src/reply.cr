@@ -24,7 +24,7 @@ class Socks::Reply
     when ADDR_TYPE::IPV6
       new_addr = [] of Int32
       buffer[4, 16].each_cons(9) { |slice|
-        new_addr << slice.reduce(0) { |a,i|
+        new_addr << slice.reduce(0) { |a, i|
           a + i
         }
       }
