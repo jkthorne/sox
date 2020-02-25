@@ -36,7 +36,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   socks:
-    gitlab: wontruefree/socks
+    github: wontruefree/socks
 ```
 
 ## Usage
@@ -157,21 +157,6 @@ socket.flush
 response = HTTP::Client::Response.from_io?(socket)
 if response.success?
   puts "Got to crystal through SOCKS5!!!"
-end
-```
-
-### Use the raw socket
-
-sending some raw data over the socket.
-
-```crystal
-require "socks"
-
-socket = Socks.new(addr: "127.0.0.1")
-socket << "ping"
-
-if socket.gets == "pong"
-  puts "hello SOCKS!!"
 end
 ```
 
