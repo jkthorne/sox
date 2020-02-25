@@ -72,7 +72,7 @@ request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.or
 request.to_io(socket)
 socket.flush
 
-response = HTTP::Client::Response.from_io?(socket)
+response = HTTP::Client::Response.from_io(socket)
 if response.success?
   puts "Got to crystal through SOCKS5!!!"
 end
