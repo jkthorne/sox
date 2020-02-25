@@ -30,9 +30,15 @@ class Socks < IPSocket
     DOMAIN = 3_u8
   end
 
-  def initialize(addr : String, port : Int = 80, host_addr : String = "127.0.0.1", host_port : Int = 1080,
-                 command : COMMAND = COMMAND::CONNECT, backlog : Int = SOMAXCONN, reuse_port : Bool = false)
-    if command == COMMAND::CONNECT
+  def initialize(addr : String,
+                 port : Int = 80,
+                 host_addr : String = "127.0.0.1",
+                 host_port : Int = 1080,
+                 command : COMMAND = COMMAND::CONNECT,
+                 backlog : Int = SOMAXCONN,
+                 reuse_port : Bool = false)
+    case command
+    when COMMAND::CONNECT
       Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
@@ -41,7 +47,7 @@ class Socks < IPSocket
         end
       end
       main_connect(addr, port)
-    elsif command == COMMAND::UDP_ASSOCIATE
+    when COMMAND::UDP_ASSOCIATE
       Addrinfo.udp(host_addr, host_port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
         connect(addrinfo, timeout: nil) do |error|
@@ -49,7 +55,7 @@ class Socks < IPSocket
           error
         end
       end
-    elsif command == COMMAND::BIND
+    when COMMAND::BIND
       Addrinfo.tcp(addr, port, timeout: nil) do |addrinfo|
         super(addrinfo.family, addrinfo.type, addrinfo.protocol)
 
@@ -71,16 +77,12 @@ class Socks < IPSocket
     end
   end
 
-  def self.udp(*args)
-    UDP.new(*args)
+  def accept? : IO?
+    accept?
   end
 
-  def self.client(*args)
-    Client.new(*args)
-  end
-
-  def self.server(*args)
-    Server.new(*args)
+  def accept?(&block) : IO?
+    accept?(&block)
   end
 
   def main_connect(addr : String, port : Int)

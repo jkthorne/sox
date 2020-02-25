@@ -1,6 +1,12 @@
 require "../socks.cr"
 require "http/client"
 
+class Socks
+  def self.client(*args)
+    Socks::Client.new(*args)
+  end
+end
+
 class Socks::Client < HTTP::Client
   def initialize(*args, @host_addr : String, @host_port : Int32)
     super(*args)
