@@ -77,6 +77,14 @@ class Socks < IPSocket
     end
   end
 
+  def accept : IO
+    accept
+  end
+
+  def accept(&block) : IO
+    accept(&block)
+  end
+
   def accept? : IO?
     accept?
   end
