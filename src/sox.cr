@@ -1,6 +1,6 @@
 require "socket"
 
-class Socks < IPSocket
+class Sox < IPSocket
   include Socket::Server
 
   V4         = 4_u8
@@ -77,20 +77,12 @@ class Socks < IPSocket
     end
   end
 
-  def accept : IO
-    accept
-  end
-
-  def accept(&block) : IO
-    accept(&block)
-  end
-
   def accept? : IO?
-    accept?
-  end
-
-  def accept?(&block) : IO?
-    accept?(&block)
+    if client_fd = accept_impl
+      sock = Sox.new(client_fd, family, type, protocol, blocking)
+      sock.sync = sync?
+      sock
+    end
   end
 
   def main_connect(addr : String, port : Int)

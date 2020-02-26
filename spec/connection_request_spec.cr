@@ -1,24 +1,24 @@
 require "./spec_helper"
 
-describe Socks::ConnectionRequest do
+describe Sox::ConnectionRequest do
   it "default buffer" do
-    c_request = Socks::ConnectionRequest.new
+    c_request = Sox::ConnectionRequest.new
     c_request.buffer.should eq Bytes[
-      Socks::V5, Socks::COMMAND::CONNECT, Socks::RESERVED,
+      Sox::V5, Sox::COMMAND::CONNECT, Sox::RESERVED,
     ]
   end
 
   it "initializes with version" do
-    c_request = Socks::ConnectionRequest.new(version: Socks::V4)
+    c_request = Sox::ConnectionRequest.new(version: Sox::V4)
     c_request.buffer.should eq Bytes[
-      Socks::V4, Socks::COMMAND::CONNECT, Socks::RESERVED,
+      Sox::V4, Sox::COMMAND::CONNECT, Sox::RESERVED,
     ]
   end
 
   it "initializes with version" do
-    c_request = Socks::ConnectionRequest.new(command: Socks::COMMAND::BIND)
+    c_request = Sox::ConnectionRequest.new(command: Sox::COMMAND::BIND)
     c_request.buffer.should eq Bytes[
-      Socks::V5, Socks::COMMAND::BIND, Socks::RESERVED,
+      Sox::V5, Sox::COMMAND::BIND, Sox::RESERVED,
     ]
   end
 end

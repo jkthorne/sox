@@ -1,4 +1,4 @@
-class Socks::ConnectionResponse
+class Sox::ConnectionResponse
   property buffer
 
   def initialize
@@ -10,7 +10,7 @@ class Socks::ConnectionResponse
   end
 
   def method
-    Socks::AUTH.from_value?(buffer[1])
+    Sox::AUTH.from_value?(buffer[1])
   end
 
   def connected?
@@ -34,6 +34,6 @@ class Socks::ConnectionResponse
   end
 
   def inspect(io)
-    io << "#<Socks::Request version=#{version} method=#{method}>"
+    io << "#<Sox::Request version=#{version} method=#{method}>"
   end
 end

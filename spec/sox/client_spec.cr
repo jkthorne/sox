@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-describe Socks::Client do
+describe Sox::Client do
   it "connect" do
     begin
       server = HTTP::Server.new do |context|
@@ -12,7 +12,7 @@ describe Socks::Client do
       address = server.bind_unused_port "127.0.0.1"
       spawn { server.try &.listen }
 
-      client = Socks::Client.new("127.0.0.1", address.port, host_addr: "127.0.0.1", host_port: SSH_PORT)
+      client = Sox::Client.new("127.0.0.1", address.port, host_addr: "127.0.0.1", host_port: SSH_PORT)
       response = client.get("/ping")
       response.try &.body.should eq "pong"
     ensure

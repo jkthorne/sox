@@ -1,9 +1,9 @@
 require "spec"
-require "../src/socks"
+require "../src/sox"
 
-require "../src/socks/server.cr"
-require "../src/socks/client.cr"
-require "../src/socks/udp.cr"
+require "../src/sox/server.cr"
+require "../src/sox/client.cr"
+require "../src/sox/udp.cr"
 
 SSH_PORT    = rand(8000..10000)
 SSH_PROCESS = Process.new("ssh", ["-D", SSH_PORT.to_s, "-C", "-N", "127.0.0.1"])

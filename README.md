@@ -1,6 +1,6 @@
-# socks
+# Sox
 
-Socks is a library for creating SOCKS clients and servers.  Socks is a network proxy and can proxy connections like HTTP requests or ssh connections.  
+Sox is a library for creating SOCKS5 clients and servers.  Sox is a network proxy and can proxy connections like HTTP requests or ssh connections.  
 
 ## Documentation
 
@@ -35,8 +35,8 @@ Add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:
-  socks:
-    github: wontruefree/socks
+  sox:
+    github: wontruefree/sox
 ```
 
 ## Usage
@@ -61,12 +61,12 @@ ssh -D 1080 -C -N user@remote.com
 
 #### Basic Socket
 
-To open a socks connection and send a basic HTTP request and get a response.
+To open a SOCKS connection and send a basic HTTP request and get a response.
 
 ```crystal
-require "socks"
+require "sox"
 
-socket = Socks.new(addr: "52.85.89.35")
+socket = Sox.new(addr: "52.85.89.35")
 request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
 
 request.to_io(socket)
@@ -80,10 +80,10 @@ end
 
 #### Basic Client
 
-`Socks::Client` functions almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+`Sox::Client` functions almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
 
 ```crystal
-client = Socks::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
+client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
 response = client.get("/")
 puts response.status_code      # => 200
 puts response.body.lines.first # => "<!doctype html>"
@@ -92,13 +92,13 @@ client.close
 
 #### Basic UDP
 
-`Socks::UDP` functions almost like the Crystal (UDPSocket)[https://crystal-lang.org/api/latest/UDPSocket.html]
+`Sox::UDP` functions almost like the Crystal (UDPSocket)[https://crystal-lang.org/api/latest/UDPSocket.html]
 
 ```crystal
 server = UDPSocket.new
 server.bind "localhost", 9999
 
-client = Socks::UDP.new(host_addr: "127.0.0.1", host_port: 1080)
+client = Sox::UDP.new(host_addr: "127.0.0.1", host_port: 1080)
 client.connect "localhost", 9999
 
 client.send "message"
@@ -111,10 +111,10 @@ client.close
 server.close
 ```
 
-you can use `Socks::Client` almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+you can use `Sox::Client` almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
 
 ```crystal
-client = Socks::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
+client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
 response = client.get("/")
 puts response.status_code      # => 200
 puts response.body.lines.first # => "<!doctype html>"
@@ -127,9 +127,9 @@ To open a connection to a remote SOCKS5 Server.
 
 
 ```crystal
-require "socks"
+require "sox"
 
-socket = Socks.new(host_addr: "gateway.com", addr: "52.85.89.35")
+socket = Sox.new(host_addr: "gateway.com", addr: "52.85.89.35")
 request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
 
 request.to_io(socket)
@@ -146,9 +146,9 @@ end
 Sometimes you connect to web servers or remote SOCKS servers on ports that are not default.  This is built into the top level interface no having to deal with requests or connection requests directly.
 
 ```crystal
-require "socks"
+require "sox"
 
-socket = Socks.new(host_addr: "gateway.com" host_port: 8010, addr: "52.85.89.35", port: 3000)
+socket = Sox.new(host_addr: "gateway.com" host_port: 8010, addr: "52.85.89.35", port: 3000)
 request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
 
 request.to_io(socket)

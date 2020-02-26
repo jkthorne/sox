@@ -1,4 +1,4 @@
-class Socks::ConnectionRequest
+class Sox::ConnectionRequest
   property buffer : Bytes
 
   def initialize(version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
@@ -14,6 +14,6 @@ class Socks::ConnectionRequest
   end
 
   def inspect(io)
-    io << "#<Socks::ConnectionRequest version=#{version} command=#{command}>"
+    io << "#<Sox::ConnectionRequest version=#{version} command=#{command}>"
   end
 end

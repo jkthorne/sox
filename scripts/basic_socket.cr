@@ -1,7 +1,7 @@
-require "../src/socks"
+require "../src/sox"
 require "http/client"
 
-socket = Socks.new(addr: "99.84.248.30")
+socket = Sox.new(addr: "99.84.248.30")
 request = HTTP::Request.new("GET", "/", HTTP::Headers{"Host" => "crystal-lang.org"})
 
 request.to_io(socket)

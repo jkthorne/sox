@@ -1,4 +1,4 @@
-class Socks::Request
+class Sox::Request
   property buffer : Bytes
 
   def initialize(addr : String, port : Int = 80, version : UInt8 = V5, command : COMMAND = COMMAND::CONNECT)
@@ -29,17 +29,17 @@ class Socks::Request
           {% raise "Unsupported platform" %}
         {% end %}
       else
-        raise "invalid addr type for Socks::Request"
+        raise "invalid addr type for Sox::Request"
       end
     end
 
-    # # Set Socks version
+    # Set Socks version
     @buffer[0] = version
 
-    # # Set Socks command
+    # Set Socks command
     @buffer[1] = command.value
 
-    # # Set port
+    # Set port
     IO::ByteFormat::NetworkEndian.encode(
       port.to_u16, @buffer.[@buffer.size - 2, 2].to_slice
     )
@@ -96,7 +96,7 @@ class Socks::Request
   end
 
   def inspect(io)
-    io << "#<Socks::Request version=#{version} reply=#{reply} "
+    io << "#<Sox::Request version=#{version} reply=#{reply} "
     io << "addr_type=#{addr_type} addr=#{addr} port=#{port}>"
   end
 end

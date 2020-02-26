@@ -1,13 +1,13 @@
 require "../spec_helper"
 
-describe Socks::UDP do
+describe Sox::UDP do
   it "associate" do
     begin
       udp_port = rand(8000..10000)
       server = UDPSocket.new
       server.bind "localhost", udp_port
 
-      client = Socks::UDP.new(host_addr: "127.0.0.1", host_port: SSH_PORT)
+      client = Sox::UDP.new(host_addr: "127.0.0.1", host_port: SSH_PORT)
       client.connect("localhost", udp_port)
 
       client.send("yolo")

@@ -1,12 +1,12 @@
-require "../socks.cr"
+require "../sox.cr"
 
-class Socks
+class Sox
   def self.udp(*args)
-    Socks::UDP.new(*args)
+    Sox::UDP.new(*args)
   end
 end
 
-class Socks::UDP < UDPSocket
+class Sox::UDP < UDPSocket
   def initialize(*args, @host_addr : String, @host_port : Int32)
     super(*args)
   end

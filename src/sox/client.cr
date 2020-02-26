@@ -1,13 +1,13 @@
-require "../socks.cr"
+require "../sox.cr"
 require "http/client"
 
-class Socks
+class Sox
   def self.client(*args)
-    Socks::Client.new(*args)
+    Sox::Client.new(*args)
   end
 end
 
-class Socks::Client < HTTP::Client
+class Sox::Client < HTTP::Client
   def initialize(*args, @host_addr : String, @host_port : Int32)
     super(*args)
   end
@@ -17,7 +17,7 @@ class Socks::Client < HTTP::Client
     return socket if socket
 
     hostname = @host.starts_with?('[') && @host.ends_with?(']') ? @host[1..-2] : @host
-    socket = Socks.new hostname, @port
+    socket = Sox.new hostname, @port
     socket.read_timeout = @read_timeout if @read_timeout
     socket.sync = false
     @socket = socket

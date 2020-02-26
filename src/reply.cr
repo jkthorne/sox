@@ -1,4 +1,4 @@
-class Socks::Reply
+class Sox::Reply
   property buffer : Bytes
 
   def initialize(buffer_size : Int = 10)
@@ -75,7 +75,7 @@ class Socks::Reply
   end
 
   def inspect(io)
-    io << "#<Socks::Reply version=#{version} reply=#{reply} "
+    io << "#<Sox::Reply version=#{version} reply=#{reply} "
     io << "addr_type=#{addr_type} addr=#{addr} port=#{port}>"
   end
 end

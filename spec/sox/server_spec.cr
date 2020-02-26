@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-describe Socks::Server do
+describe Sox::Server do
   it "bind" do
     begin
       bind_port = rand(8000..10000)

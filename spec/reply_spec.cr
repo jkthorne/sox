@@ -2,19 +2,19 @@ require "./spec_helper"
 
 private def default_bytes
   Bytes[
-    Socks::V5, Socks::COMMAND::CONNECT, 0_u8, Socks::ADDR_TYPE::IPV4,
+    Sox::V5, Sox::COMMAND::CONNECT, 0_u8, Sox::ADDR_TYPE::IPV4,
     0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
   ].clone
 end
 
-describe Socks::Reply do
+describe Sox::Reply do
   it "default buffer" do
     expected_bytes = default_bytes
-    actual_response = Socks::Reply.new
+    actual_response = Sox::Reply.new
     IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
-    actual_response.version.should eq Socks::V5
-    actual_response.reply.should eq Socks::COMMAND::CONNECT
+    actual_response.version.should eq Sox::V5
+    actual_response.reply.should eq Sox::COMMAND::CONNECT
     actual_response.addr.should eq "0.0.0.0"
     actual_response.port.should eq 0
   end
@@ -22,7 +22,7 @@ describe Socks::Reply do
   describe "#addr" do
     it "ip4v addr" do
       expected_bytes = default_bytes
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -31,11 +31,11 @@ describe Socks::Reply do
 
     it "ip6v addr" do
       expected_bytes = Bytes[
-        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::IPV6,
+        Sox::V5, 0_u8, 0_u8, Sox::ADDR_TYPE::IPV6,
         0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
         0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
       ].clone
-      actual_response = Socks::Reply.new(expected_bytes.size)
+      actual_response = Sox::Reply.new(expected_bytes.size)
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -44,12 +44,12 @@ describe Socks::Reply do
 
     it "domain addr" do
       expected_bytes = Bytes[
-        Socks::V5, 0_u8, 0_u8, Socks::ADDR_TYPE::DOMAIN, 15_u8,
+        Sox::V5, 0_u8, 0_u8, Sox::ADDR_TYPE::DOMAIN, 15_u8,
         119_u8, 119_u8, 119_u8, 46_u8, 101_u8, 120_u8, 97_u8,
         109_u8, 112_u8, 108_u8, 101_u8, 46_u8, 99_u8, 111_u8,
         109_u8, 0_u8, 0_u8,
       ].clone
-      actual_response = Socks::Reply.new(expected_bytes.size)
+      actual_response = Sox::Reply.new(expected_bytes.size)
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -62,7 +62,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_version = 100_u8
       expected_bytes[0] = expected_version
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -73,7 +73,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_addr_type = 100_u8
       expected_bytes[3] = expected_addr_type
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -82,7 +82,7 @@ describe Socks::Reply do
 
     it "successful response" do
       expected_bytes = default_bytes
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -93,7 +93,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 1_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -104,7 +104,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 2_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -115,7 +115,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 3_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -126,7 +126,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 4_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -137,7 +137,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 5_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -148,7 +148,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 6_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -159,7 +159,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 6_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -170,7 +170,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 7_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
@@ -181,7 +181,7 @@ describe Socks::Reply do
       expected_bytes = default_bytes
       expected_reply = 8_u8
       expected_bytes[2] = expected_reply
-      actual_response = Socks::Reply.new
+      actual_response = Sox::Reply.new
 
       IO::Memory.new(expected_bytes).read(actual_response.buffer)
 
