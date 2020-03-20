@@ -1,8 +1,8 @@
 require "socket"
 
-class Sox < IPSocket
-  include Socket::Server
+require "./sox/tcp/socket"
 
+module Sox
   V4         = 4_u8
   V5         = 5_u8
   BLANK_BYTE = 0_u8
@@ -30,82 +30,31 @@ class Sox < IPSocket
     DOMAIN = 3_u8
   end
 
-  def initialize(addr : String,
+  def self.new(addr : String,
                  port : Int = 80,
                  host_addr : String = "127.0.0.1",
                  host_port : Int = 1080,
                  command : COMMAND = COMMAND::CONNECT,
-                 backlog : Int = SOMAXCONN,
+                 # backlog : Int = SOMAXCONN,
                  reuse_port : Bool = false)
     case command
     when COMMAND::CONNECT
-      Addrinfo.tcp(host_addr, host_port, timeout: nil) do |addrinfo|
-        super(addrinfo.family, addrinfo.type, addrinfo.protocol)
-        connect(addrinfo, timeout: nil) do |error|
-          close
-          error
-        end
-      end
-      main_connect(addr, port)
+      Sox::TCP::Socket.new(
+        addr: addr,
+        posrt: port,
+        host: host_addr,
+        port: host_port,
+        dns_timeout: nil,
+        connect_timeout: nil
+      )
     when COMMAND::UDP_ASSOCIATE
-      Addrinfo.udp(host_addr, host_port, timeout: nil) do |addrinfo|
-        super(addrinfo.family, addrinfo.type, addrinfo.protocol)
-        connect(addrinfo, timeout: nil) do |error|
-          close
-          error
-        end
-      end
+      socket = Sox::UDP::Socket.new
+      socket.connect host_addr, host_port
     when COMMAND::BIND
-      Addrinfo.tcp(addr, port, timeout: nil) do |addrinfo|
-        super(addrinfo.family, addrinfo.type, addrinfo.protocol)
-
-        self.reuse_address = true
-        self.reuse_port = true if reuse_port
-
-        if errno = bind(addrinfo) { |errno| errno }
-          close
-          next errno
-        end
-
-        if errno = listen(backlog) { |errno| errno }
-          close
-          next errno
-        end
-      end
+      Sox::TCP::Server.new(host: addr, port: port)
     else
       raise "invalid command type"
     end
-  end
-
-  def accept? : IO?
-    if client_fd = accept_impl
-      sock = Sox.new(client_fd, family, type, protocol, blocking)
-      sock.sync = sync?
-      sock
-    end
-  end
-
-  def main_connect(addr : String, port : Int)
-    connect_host
-    connect_remote(addr, port)
-  end
-
-  def connect_host
-    connection_request = ConnectionRequest.new
-    write(connection_request.buffer)
-
-    connection_response = ConnectionResponse.new
-    read(connection_response.buffer)
-    self
-  end
-
-  def connect_remote(addr : String, port : Int)
-    request = Request.new(addr: addr, port: port)
-    write(request.buffer)
-
-    reply = Reply.new(buffer_size: request.size)
-    read(reply.buffer)
-    self
   end
 
   def receive(max_message_size = 512) : {String, IPAddress}
@@ -123,52 +72,13 @@ class Sox < IPSocket
     {bytes_read, IPAddress.from(sockaddr, addrlen)}
   end
 
-  def tcp_nodelay?
-    getsockopt_bool LibC::TCP_NODELAY, level: Protocol::TCP
+  def tcp?
+    @command == COMMAND::CONNECT || @command == COMMAND::BIND
   end
 
-  def tcp_nodelay=(val : Bool)
-    setsockopt_bool LibC::TCP_NODELAY, val, level: Protocol::TCP
+  def udp?
+    @command == UDP_ASSOCIATE
   end
-
-  {% unless flag?(:openbsd) %}
-    def tcp_keepalive_idle
-      optname = {% if flag?(:darwin) %}
-        LibC::TCP_KEEPALIVE
-      {% else %}
-        LibC::TCP_KEEPIDLE
-      {% end %}
-      getsockopt optname, 0, level: Protocol::TCP
-    end
-
-    def tcp_keepalive_idle=(val : Int)
-      optname = {% if flag?(:darwin) %}
-        LibC::TCP_KEEPALIVE
-      {% else %}
-        LibC::TCP_KEEPIDLE
-      {% end %}
-      setsockopt optname, val, level: Protocol::TCP
-      val
-    end
-
-    def tcp_keepalive_interval
-      getsockopt LibC::TCP_KEEPINTVL, 0, level: Protocol::TCP
-    end
-
-    def tcp_keepalive_interval=(val : Int)
-      setsockopt LibC::TCP_KEEPINTVL, val, level: Protocol::TCP
-      val
-    end
-
-    def tcp_keepalive_count
-      getsockopt LibC::TCP_KEEPCNT, 0, level: Protocol::TCP
-    end
-
-    def tcp_keepalive_count=(val : Int)
-      setsockopt LibC::TCP_KEEPCNT, val, level: Protocol::TCP
-      val
-    end
-  {% end %}
 end
 
 require "./connection_request.cr"

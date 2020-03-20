@@ -1,6 +1,6 @@
 require "../sox.cr"
 
-class Sox
+module Sox
   def self.udp(*args)
     Sox::UDP.new(*args)
   end

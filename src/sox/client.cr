@@ -1,7 +1,7 @@
 require "../sox.cr"
 require "http/client"
 
-class Sox
+module Sox
   def self.client(*args)
     Sox::Client.new(*args)
   end
