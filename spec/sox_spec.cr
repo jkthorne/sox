@@ -2,8 +2,12 @@ require "./spec_helper"
 
 describe Sox do
   it "smoke" do
-    socket = Sox.new(host_addr: "127.0.0.1", host_port: 1080,
-      addr: "www.example.com", port: 80)
+    socket = Sox.new(
+      host: "www.example.com",
+      port: 80,
+      proxy_host: "127.0.0.1",
+      proxy_port: 1080,
+    )
 
     headers = HTTP::Headers{"Host" => "www.example.com"}
     request = HTTP::Request.new("GET", "/", headers)

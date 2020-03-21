@@ -30,22 +30,21 @@ module Sox
     DOMAIN = 3_u8
   end
 
-  def self.new(addr : String,
-                 port : Int = 80,
-                 host_addr : String = "127.0.0.1",
-                 host_port : Int = 1080,
-                 command : COMMAND = COMMAND::CONNECT,
-                 # backlog : Int = SOMAXCONN,
-                 reuse_port : Bool = false)
+  def self.new(host : String,
+               port : Int = 80,
+               proxy_host : String = "127.0.0.1",
+               proxy_port : Int = 1080,
+               command : COMMAND = COMMAND::CONNECT,
+               reuse_port : Bool = false)
     case command
     when COMMAND::CONNECT
       Sox::TCP::Socket.new(
-        addr: addr,
-        posrt: port,
-        host: host_addr,
-        port: host_port,
+        host: host,
+        port: port,
         dns_timeout: nil,
-        connect_timeout: nil
+        connect_timeout: nil,
+        proxy_host: proxy_host,
+        proxy_port: proxy_port,
       )
     when COMMAND::UDP_ASSOCIATE
       socket = Sox::UDP::Socket.new

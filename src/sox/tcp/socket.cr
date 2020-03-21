@@ -1,8 +1,8 @@
 class Sox::TCP::Socket < TCPSocket
-  def initialize(*args)
+  def initialize(*args, proxy_host : String, proxy_port : Int)
     super(args)
     connect_host
-    connect_remote(addr, port)
+    connect_remote(host: proxy_host, port: proxy_port)
   end
 
   private def connect_host
@@ -14,8 +14,8 @@ class Sox::TCP::Socket < TCPSocket
     connection_response
   end
 
-  private def connect_remote(addr : String, port : Int)
-    request = Request.new(addr: addr, port: port)
+  private def connect_remote(host : String, port : Int)
+    request = Request.new(addr: host, port: port)
     write(request.buffer)
 
     reply = Reply.new(buffer_size: request.size)
