@@ -80,7 +80,7 @@ end
 
 #### Basic Client
 
-`Sox::Client` functions almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+`Sox::Client` functions almost like the Crystal [HTTP::Client](https://crystal-lang.org/api/latest/HTTP/Client.html)
 
 ```crystal
 client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
@@ -92,7 +92,7 @@ client.close
 
 #### Basic UDP
 
-`Sox::UDP` functions almost like the Crystal (UDPSocket)[https://crystal-lang.org/api/latest/UDPSocket.html]
+`Sox::UDP` functions almost like the Crystal [UDPSocket](https://crystal-lang.org/api/latest/UDPSocket.html)
 
 ```crystal
 server = UDPSocket.new
@@ -111,7 +111,7 @@ client.close
 server.close
 ```
 
-you can use `Sox::Client` almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+you can use `Sox::Client` almost like the Crystal [HTTP::Client](https://crystal-lang.org/api/latest/HTTP/Client.html)
 
 ```crystal
 client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
