@@ -1,6 +1,8 @@
 require "socket"
 
 require "./sox/tcp/socket"
+require "./sox/tcp/server"
+require "./sox/udp/socket"
 
 module Sox
   V4         = 4_u8
@@ -39,18 +41,21 @@ module Sox
     case command
     when COMMAND::CONNECT
       Sox::TCP::Socket.new(
-        host: host,
-        port: port,
-        dns_timeout: nil,
-        connect_timeout: nil,
+#        host: host,
+#        port: port,
+#        dns_timeout: nil,
+#        connect_timeout: nil,
+	host,
+	port,
         proxy_host: proxy_host,
         proxy_port: proxy_port,
       )
     when COMMAND::UDP_ASSOCIATE
       socket = Sox::UDP::Socket.new
-      socket.connect host_addr, host_port
+      socket.connect host, port
+      socket
     when COMMAND::BIND
-      Sox::TCP::Server.new(host: addr, port: port)
+      Sox::TCP::Server.new(host: host, port: port)
     else
       raise "invalid command type"
     end

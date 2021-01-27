@@ -10,13 +10,13 @@ class Sox::Request
     else
       ip_address = Socket::IPAddress.new(addr, port)
       case ip_address.family
-      when Family::INET
+      when Socket::Family::INET
         @buffer = Bytes.new(10)
         @buffer[3] = ADDR_TYPE::IPV4.value
         ip_address.address.split(".").each_with_index { |b, i|
           @buffer[4 + i] = b.to_u8
         }
-      when Family::INET6
+      when Socket::Family::INET6
         @buffer = Bytes.new(22)
         @buffer[3] = ADDR_TYPE::IPV6.value
         {% if flag?(:darwin) || flag?(:openbsd) || flag?(:freebsd) %}

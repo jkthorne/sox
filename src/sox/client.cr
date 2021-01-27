@@ -1,7 +1,7 @@
 require "../sox.cr"
 require "http/client"
 
-module Sox
+module SoxClient
   def self.client(*args)
     Sox::Client.new(*args)
   end
@@ -17,7 +17,7 @@ class Sox::Client < HTTP::Client
     return socket if socket
 
     hostname = @host.starts_with?('[') && @host.ends_with?(']') ? @host[1..-2] : @host
-    socket = Sox.new hostname, @port
+    socket = Sox.new host: hostname, port: @port
     socket.read_timeout = @read_timeout if @read_timeout
     socket.sync = false
     @socket = socket

@@ -1,6 +1,6 @@
 class Sox::TCP::Socket < TCPSocket
   def initialize(*args, proxy_host : String, proxy_port : Int)
-    super(args)
+    super(*args)
     connect_host
     connect_remote(host: proxy_host, port: proxy_port)
   end
