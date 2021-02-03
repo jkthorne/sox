@@ -8,7 +8,7 @@ module SoxClient
 end
 
 class Sox::Client < HTTP::Client
-  def initialize(*args, @host_addr : String, @host_port : Int32)
+  def initialize(*args, @proxy_addr : String, @proxy_port : Int32, tls : TLSContext = nil)
     super(*args)
   end
 
@@ -16,8 +16,8 @@ class Sox::Client < HTTP::Client
     socket = @socket
     return socket if socket
 
-    hostname = @host.starts_with?('[') && @host.ends_with?(']') ? @host[1..-2] : @host
-    socket = Sox.new host: hostname, port: @port
+    proxy_addr = @proxy_addr.starts_with?('[') && @proxy_addr.ends_with?(']') ? @proxy_addr[1..-2] : @proxy_addr
+    socket = Sox.new host: proxy_addr, port: @proxy_port
     socket.read_timeout = @read_timeout if @read_timeout
     socket.sync = false
     @socket = socket
