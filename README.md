@@ -141,7 +141,7 @@ if response.success?
 end
 ```
 
-### Connection using none default ports
+### Connection using non-default ports
 
 Sometimes you connect to web servers or remote SOCKS servers on ports that are not default.  This is built into the top level interface no having to deal with requests or connection requests directly.
 
@@ -178,7 +178,7 @@ enable key based authentication for testing
 
 ```bash
 # enable key based localhost authentication
-cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 ```
 
 ### TOR
