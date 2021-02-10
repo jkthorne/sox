@@ -2,11 +2,12 @@ require "../sox.cr"
 
 module Sox
   def self.udp(*args)
-    Sox::UDP.new(*args)
+    SoxUDP.new(*args)
   end
+
 end
 
-class Sox::UDP < UDPSocket
+class SoxUDP < UDPSocket
   def initialize(*args, @host_addr : String, @host_port : Int32)
     super(*args)
   end

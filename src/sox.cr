@@ -82,8 +82,3 @@ module Sox
     @command == UDP_ASSOCIATE
   end
 end
-
-require "./connection_request.cr"
-require "./connection_response.cr"
-require "./request.cr"
-require "./reply.cr"
