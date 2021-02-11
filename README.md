@@ -104,8 +104,8 @@ client.connect "localhost", 9999
 client.send "message"
 message, client_addr = server.receive
 
-message     # => "message"
-client_addr # => Socket::IPAddress(127.0.0.1:50516)
+puts message     # => "message"
+puts client_addr # => Socket::IPAddress(127.0.0.1:50516)
 
 client.close
 server.close
