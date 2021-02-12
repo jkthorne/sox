@@ -40,32 +40,34 @@ class Sox::Reply
   end
 
   def server_message
+    message = "Unknown State"
+
     return "Server doesn't reply" if buffer.empty?
     return "SOCKS version #{version} is not supported" if ![V4, V5].includes?(version)
     return "ADDR type not supported" if !ADDR_TYPE.values.includes?(addr_type)
 
     case buffer[2]
     when 0_u8
-      "succeeded"
+      message = "succeeded"
     when 1_u8
-      "general SOCKS server failure"
+      message = "general SOCKS server failure"
     when 2_u8
-      "connection not allowed by ruleset"
+      message = "connection not allowed by ruleset"
     when 3_u8
-      "Network unreachable"
+      message = "Network unreachable"
     when 4_u8
-      "Host unreachable"
+      message = "Host unreachable"
     when 5_u8
-      "Connection refused"
+      message = "Connection refused"
     when 6_u8
-      "TTL expired"
+      message = "TTL expired"
     when 7_u8
-      "Command not supported"
+      message = "Command not supported"
     when 8_u8
-      "Address type not supported"
-    else
-      "Unknown State"
+      message = "Address type not supported"
     end
+
+    message
   end
 
   def size
