@@ -41,10 +41,10 @@ module Sox
     case command
     when COMMAND::CONNECT
       Sox::TCP::Socket.new(
-	proxy_host,
-	proxy_port,
-	nil, # dns_timeout
-	nil, # connect_timeout
+        proxy_host,
+        proxy_port,
+        nil, # dns_timeout
+        nil, # connect_timeout
         host_addr: host,
         host_port: port,
       )
