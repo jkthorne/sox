@@ -17,7 +17,7 @@ class Sox::Client < HTTP::Client
     return socket if socket
 
     hostname = @host.starts_with?('[') && @host.ends_with?(']') ? @host[1..-2] : @host
-    socket = Sox.new host: hostname, port: @port, proxy_host: proxy_host, proxy_port: proxy_port
+    socket = Sox.new host: hostname, port: @port, proxy_host: @proxy_host, proxy_port: @proxy_port
     socket.read_timeout = @read_timeout if @read_timeout
     socket.write_timeout = @write_timeout if @write_timeout
     socket.sync = false
