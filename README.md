@@ -80,7 +80,7 @@ end
 
 #### Basic Client
 
-`Sox::Client` functions almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+`Sox::Client` functions almost like the Crystal [HTTP::Client](https://crystal-lang.org/api/latest/HTTP/Client.html)
 
 ```crystal
 client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
@@ -92,7 +92,7 @@ client.close
 
 #### Basic UDP
 
-`Sox::UDP` functions almost like the Crystal (UDPSocket)[https://crystal-lang.org/api/latest/UDPSocket.html]
+`Sox::UDP` functions almost like the Crystal [UDPSocket](https://crystal-lang.org/api/latest/UDPSocket.html)
 
 ```crystal
 server = UDPSocket.new
@@ -104,14 +104,14 @@ client.connect "localhost", 9999
 client.send "message"
 message, client_addr = server.receive
 
-message     # => "message"
-client_addr # => Socket::IPAddress(127.0.0.1:50516)
+puts message     # => "message"
+puts client_addr # => Socket::IPAddress(127.0.0.1:50516)
 
 client.close
 server.close
 ```
 
-you can use `Sox::Client` almost like the Crystal (HTTP::Client)[https://crystal-lang.org/api/latest/HTTP/Client.html]
+you can use `Sox::Client` almost like the Crystal [HTTP::Client](https://crystal-lang.org/api/latest/HTTP/Client.html)
 
 ```crystal
 client = Sox::Client.new("www.example.com", host_addr: "127.0.0.1", host_port: 1080)
@@ -141,7 +141,7 @@ if response.success?
 end
 ```
 
-### Connection using none default ports
+### Connection using non-default ports
 
 Sometimes you connect to web servers or remote SOCKS servers on ports that are not default.  This is built into the top level interface no having to deal with requests or connection requests directly.
 
@@ -178,7 +178,7 @@ enable key based authentication for testing
 
 ```bash
 # enable key based localhost authentication
-cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 ```
 
 ### TOR

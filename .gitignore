@@ -8,3 +8,8 @@
 /shard.lock
 
 .DS_Store
+
+*.swp
+*.swo
+
+/sox
