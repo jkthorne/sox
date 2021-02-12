@@ -4,10 +4,10 @@ require "../../request.cr"
 require "../../reply.cr"
 
 class Sox::TCP::Socket < TCPSocket
-  def initialize(*args, proxy_host : String, proxy_port : Int)
+  def initialize(*args, host_addr : String, host_port : Int)
     super(*args)
     connect_host
-    connect_remote(host: proxy_host, port: proxy_port)
+    connect_remote(host: host_addr, port: host_port)
   end
 
   private def connect_host

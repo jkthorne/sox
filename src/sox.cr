@@ -41,16 +41,16 @@ module Sox
     case command
     when COMMAND::CONNECT
       Sox::TCP::Socket.new(
-	host,
-	port,
+	proxy_host,
+	proxy_port,
 	nil, # dns_timeout
 	nil, # connect_timeout
-        proxy_host: proxy_host,
-        proxy_port: proxy_port,
+        host_addr: host,
+        host_port: port,
       )
     when COMMAND::UDP_ASSOCIATE
       socket = Sox::UDP::Socket.new
-      socket.connect host, port
+      socket.connect proxy_host, proxy_port
       socket
     when COMMAND::BIND
       Sox::TCP::Server.new(host: host, port: port)
